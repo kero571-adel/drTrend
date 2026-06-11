@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/product/ProductCard";
 import { useCart } from "@/context/CartContext";
@@ -29,7 +28,6 @@ export default function Home() {
     showToast(`${product.name} added to cart`, "success");
   };
 
-  const [, setHover] = useState(false);
   const handleScrollDown = () => {
     const nextSection = document.querySelector(".py-16");
     nextSection?.scrollIntoView({ behavior: "smooth" });
@@ -37,12 +35,11 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero */}
-      <section
-        className="relative min-h-[92vh] flex items-center justify-center overflow-hidden"
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-      >
+      {/* Hero ─────────────────────────────────────────────────────────────────
+          Background image is preloaded via <link rel="preload"> in layout.tsx.
+          Removed unused hover useState + onMouseEnter/onMouseLeave that were
+          causing unnecessary re-renders on every mouse event.                */}
+      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -62,7 +59,7 @@ export default function Home() {
             Premium scrubs and medical coats,
           </h1>
           <p className="mt-6 text-white/90 text-base md:text-lg max-w-2xl mx-auto">
-            crafted for Egypt's finest doctors and nurses.
+            crafted for Egypt&apos;s finest doctors and nurses.
           </p>
           <Link
             href="/shop"
@@ -93,7 +90,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Best Sellers */}
+      {/* Best Sellers ─────────────────────────────────────────────────────── */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-10">
@@ -122,7 +119,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* Features ─────────────────────────────────────────────────────────── */}
       <section className="bg-dark-section text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-0">
