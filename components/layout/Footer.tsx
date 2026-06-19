@@ -6,7 +6,10 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div>
-            <Link href="/" className="font-heading font-bold text-2xl text-white">
+            <Link
+              href="/"
+              className="font-heading font-bold text-2xl text-white"
+            >
               Dr Trend
             </Link>
             <p className="mt-3 text-sm text-gray-400 leading-relaxed">
@@ -24,17 +27,7 @@ export default function Footer() {
           />
           <FooterCol
             title="SUPPORT"
-            links={[
-              { label: "Contact", href: "/contact" },
-              { label: "Shipping Policy", href: "/shipping" },
-            ]}
-          />
-          <FooterCol
-            title="POLICIES"
-            links={[
-              { label: "Returns", href: "/returns" },
-              { label: "Privacy Policy", href: "/privacy" },
-            ]}
+            links={[{ label: "Contact", href: "/contact" }]}
           />
         </div>
 
@@ -42,7 +35,6 @@ export default function Footer() {
           <p className="text-xs text-gray-500">
             © 2024 Dr Trend. Premium Medical Apparel.
           </p>
-          <p className="text-xs text-gray-500">Made with care in Egypt.</p>
         </div>
       </div>
     </footer>

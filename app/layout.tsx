@@ -85,7 +85,11 @@ const SEO_KEYWORDS = [
 // ─── Page Metadata ────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
   // Title template used by child pages: "Shop | Dr Trend", "Cart | Dr Trend", etc.
   title: {
     default: "Dr Trend — سكراب طبي | Medical Scrubs & Coats Egypt",
@@ -217,7 +221,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="ltr" className={`${urbanist.variable} ${dmSans.variable}`}>
+    <html
+      lang="ar"
+      dir="ltr"
+      className={`${urbanist.variable} ${dmSans.variable}`}
+    >
       {/*
         lang="ar" → signals to Google this targets Arabic speakers (Egypt)
         dir="ltr" → keep LTR since the site UI is in English
@@ -229,7 +237,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://drtrend-3b1f8.firebaseapp.com" />
         <link rel="dns-prefetch" href="https://drtrend-3b1f8.firebaseapp.com" />
         <link rel="preconnect" href="https://fastly.picsum.photos" />
-        <meta name="google-site-verification" content="X9IzHqOQ4S-f7N9QRJGzWXIOZTXCg5-dgr9i_3JFjL0" />
+        <meta
+          name="google-site-verification"
+          content="X9IzHqOQ4S-f7N9QRJGzWXIOZTXCg5-dgr9i_3JFjL0"
+        />
         <link rel="dns-prefetch" href="https://fastly.picsum.photos" />
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />

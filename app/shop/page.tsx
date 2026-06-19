@@ -27,9 +27,9 @@ export default function Shop() {
   const allSizes = ["XS", "S", "M", "L", "XL", "XXL"];
   const allColors = [
     { name: "black", hex: "#111111" },
-    { name: "white", hex: "#F5F5F5" },
-    { name: "light-blue", hex: "#CFE8FF" },
-    { name: "olive-green", hex: "#556B2F" },
+    { name: "white", hex: "#F8F8F8" },
+    { name: "light-blue", hex: "#A6D5FF" },
+    { name: "olive", hex: "#4A5C3F" },
     { name: "navy", hex: "#1B3A6B" },
   ];
 
@@ -285,7 +285,6 @@ function SortSelect({
         <option value="featured">Featured</option>
         <option value="price-asc">Price: Low to High</option>
         <option value="price-desc">Price: High to Low</option>
-        <option value="new">New Arrivals</option>
       </select>
       <svg
         className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"

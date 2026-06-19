@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
 
 export default function Navbar() {
   const { totalItems } = useCart();
@@ -25,33 +26,14 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            className="text-primary"
-          >
-            <path
-              d="M7 7h10a2 2 0 012 2v10a2 2 0 01-2 2H7a2 2 0 01-2-2V9a2 2 0 012-2z"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M9 7V5a3 3 0 016 0v2"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            />
-            <path
-              d="M11 12h2M12 11v2"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
+          <Image
+            src="/icon.png"
+            alt="logo"
+            className="rounded-full object-cover"
+            width={40}
+            height={40}
+          
+          />
           <span className="font-heading font-bold text-lg text-gray-900 group-hover:text-primary transition-colors">
             Dr Trend
           </span>

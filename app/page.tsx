@@ -5,7 +5,7 @@ import ProductCard from "@/components/product/ProductCard";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
 import { getBestSellers } from "@/data/products";
-
+import Image from "next/image";
 export default function Home() {
   const bestSellers = getBestSellers();
   const { addItem } = useCart();
@@ -35,17 +35,22 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero ─────────────────────────────────────────────────────────────────
-          Background image is preloaded via <link rel="preload"> in layout.tsx.
-          Removed unused hover useState + onMouseEnter/onMouseLeave that were
-          causing unnecessary re-renders on every mouse event.                */}
       <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1920&q=80')",
-          }}
+        <Image
+          src="/hero/imageHero.png"
+          alt="hero"
+          width={1920}
+          height={1080}
+          priority
+          className="md:hidden absolute inset-0 w-full h-full object-cover"
+        />
+        <Image
+          src="/hero/imageHeroDesktop.png"
+          alt="hero"
+          width={1920}
+          height={1080}
+          priority
+          className="hidden md:block absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 to-black/30" />
 
@@ -53,7 +58,7 @@ export default function Home() {
           <span className="inline-block text-[#0fffe1] font-semibold text-xs md:text-sm tracking-[0.3em] uppercase mb-4">
             You Save Lives.
           </span>
-          <h1 className="font-heading font-bold text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05]">
+          <h1 className="font-heading font-bold text-white text-3xl lg:text-7xl leading-[1.05]">
             Look the Part.
             <br />
             Premium scrubs and medical coats,

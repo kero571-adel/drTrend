@@ -23,18 +23,18 @@ export default function ProductCard({ product, onAddToCart }: Props) {
           src={image}
           alt={product.name}
           loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = "none";
           }}
         />
         {product.isNewArrival && (
-          <span className="absolute top-3 left-3 bg-primary text-white text-[11px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">
+          <span className="absolute top-1 left-3 bg-primary text-white text-[11px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">
             New
           </span>
         )}
         {product.isBestSeller && !product.isNewArrival && (
-          <span className="absolute top-3 left-3 bg-gray-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">
+          <span className="absolute top-1 left-3 bg-gray-900 text-white text-[11px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">
             Best Seller
           </span>
         )}

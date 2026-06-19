@@ -11,14 +11,8 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // Block pages that shouldn't be indexed:
-        disallow: [
-          "/cart",
-          "/checkout",
-          "/account",
-          "/api/",
-          "/_next/",
-        ],
+
+        disallow: ["/cart", "/checkout", "/account", "/api/", "/_next/"],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
