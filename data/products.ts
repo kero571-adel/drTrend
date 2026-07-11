@@ -82,7 +82,7 @@ export const products: Product[] = [
     slug: "elegance-wrap-set-navy",
     category: "sets",
     gender: "women",
-    price: 1200,
+    price: 1099,
     description:
       "Wrap-style scrub set with wide-leg trousers. Effortlessly elegant for every shift.",
     longDescription: WRAP_LONG,
@@ -121,7 +121,7 @@ export const products: Product[] = [
     slug: "elegance-wrap-set-light-blue",
     category: "sets",
     gender: "women",
-    price: 1200,
+    price: 1099,
     description:
       "Wrap-style scrub set with wide-leg trousers. Effortlessly elegant for every shift.",
     longDescription: WRAP_LONG,
@@ -160,7 +160,7 @@ export const products: Product[] = [
     slug: "elegance-wrap-set-olive",
     category: "sets",
     gender: "women",
-    price: 1200,
+    price: 1099,
     description:
       "Wrap-style scrub set with wide-leg trousers. Effortlessly elegant for every shift.",
     longDescription: WRAP_LONG,
@@ -199,7 +199,7 @@ export const products: Product[] = [
     slug: "elegance-wrap-set-black",
     category: "sets",
     gender: "women",
-    price: 1200,
+    price: 1099,
     description:
       "Wrap-style scrub set with wide-leg trousers. Effortlessly elegant for every shift.",
     longDescription: WRAP_LONG,
@@ -241,7 +241,7 @@ export const products: Product[] = [
     slug: "athlete-pro-set-navy",
     category: "sets",
     gender: "men",
-    price: 1350,
+    price: 1049,
     description:
       "Sport-inspired scrub set with mandarin collar and contrast piping. Built for performance.",
     longDescription: ATHLETE_LONG,
@@ -273,7 +273,7 @@ export const products: Product[] = [
     slug: "athlete-pro-set-light-blue",
     category: "sets",
     gender: "men",
-    price: 1350,
+    price: 1049,
     description:
       "Sport-inspired scrub set with mandarin collar and contrast piping. Built for performance.",
     longDescription: ATHLETE_LONG,
@@ -309,7 +309,7 @@ export const products: Product[] = [
     slug: "athlete-pro-set-olive",
     category: "sets",
     gender: "men",
-    price: 1350,
+    price: 1049,
     description:
       "Sport-inspired scrub set with mandarin collar and contrast piping. Built for performance.",
     longDescription: ATHLETE_LONG,
@@ -340,7 +340,7 @@ export const products: Product[] = [
     slug: "athlete-pro-set-black",
     category: "sets",
     gender: "men",
-    price: 1350,
+    price: 1049,
     description:
       "Sport-inspired scrub set with mandarin collar and contrast piping. Built for performance.",
     longDescription: ATHLETE_LONG,
@@ -379,7 +379,7 @@ export const products: Product[] = [
     slug: "classic-scrub-set-navy",
     category: "sets",
     gender: "unisex",
-    price: 1100,
+    price: 999,
     description:
       "Timeless V-neck scrub set with ribbed stripe collar. A wardrobe staple.",
     longDescription: CLASSIC_LONG,
@@ -413,7 +413,7 @@ export const products: Product[] = [
     slug: "classic-scrub-set-light-blue",
     category: "sets",
     gender: "unisex",
-    price: 1100,
+    price: 999,
     description:
       "Timeless V-neck scrub set with ribbed stripe collar. A wardrobe staple.",
     longDescription: CLASSIC_LONG,
@@ -449,7 +449,7 @@ export const products: Product[] = [
     slug: "classic-scrub-set-olive",
     category: "sets",
     gender: "unisex",
-    price: 1100,
+    price: 999,
     description:
       "Timeless V-neck scrub set with ribbed stripe collar. A wardrobe staple.",
     longDescription: CLASSIC_LONG,
@@ -478,7 +478,7 @@ export const products: Product[] = [
     slug: "classic-scrub-set-black",
     category: "sets",
     gender: "unisex",
-    price: 1100,
+    price: 999,
     description:
       "Timeless V-neck scrub set with ribbed stripe collar. A wardrobe staple.",
     longDescription: CLASSIC_LONG,
@@ -508,7 +508,7 @@ export const products: Product[] = [
     slug: "essential-white-coat",
     category: "tops",
     gender: "unisex",
-    price: 950,
+    price: 599,
     description:
       "Classic knee-length white coat. Timeless, professional, and built to last.",
     longDescription: COAT_LONG,
