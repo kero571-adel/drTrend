@@ -1,0 +1,465 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/context/ToastContext";
+import { GOVERNORATES, getShippingCost, formatEGP } from "@/lib/shipping";
+import type { Order } from "@/types";
+import { saveOrder } from "@/lib/orders";
+import { initiateCheckout } from "@/lib/fpixel";
+
+const STORAGE_KEY = "drtrend_saved_address";
+
+interface Address {
+  fullName: string;
+  phone: string;
+  governorate: string;
+  city: string;
+  detailedAddress: string;
+}
+
+const emptyAddress: Address = {
+  fullName: "",
+  phone: "",
+  governorate: "",
+  city: "",
+  detailedAddress: "",
+};
+
+// طريقة دفع سعر المنتجات (السلعة نفسها) — الشحن دايمًا بيتدفع أونلاين مقدمًا
+type ProductPaymentMethod = "cash" | "online";
+
+export default function Checkout() {
+  const { items, subtotal, clearCart } = useCart();
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+  const { showToast } = useToast();
+
+  const [address, setAddress] = useState<Address>(emptyAddress);
+  const [saveAddress, setSaveAddress] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [productPaymentMethod, setProductPaymentMethod] =
+    useState<ProductPaymentMethod>("cash");
+  const [errors, setErrors] = useState<Partial<Record<keyof Address, string>>>(
+    {},
+  );
+
+  // Load saved address
+  useEffect(() => {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        setAddress(JSON.parse(raw));
+        setSaveAddress(true);
+      } catch {
+        /* ignore */
+      }
+    }
+  }, []);
+
+  // Auth + cart gate
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) router.replace("/auth/login?returnUrl=/checkout");
+    if (items.length === 0) router.replace("/cart");
+  }, [user, authLoading, items.length, router]);
+  useEffect(() => {
+    if (!authLoading && user && items.length > 0) {
+      initiateCheckout({
+        items: items.map((i) => ({ id: i.productId, quantity: i.quantity })),
+        total: subtotal,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // يتنفذ مرة واحدة بس لما الصفحة تفتح وتستقر شروطها
+  if (authLoading || !user || items.length === 0) return null;
+
+  const shipping = address.governorate
+    ? getShippingCost(address.governorate)
+    : null;
+
+  // المبلغ اللي هيتدفع أونلاين دلوقتي: الشحن دايمًا + سعر المنتجات لو العميل اختار أونلاين
+  const amountDueOnline =
+    (shipping || 0) + (productPaymentMethod === "online" ? subtotal : 0);
+
+  // المبلغ اللي هيتدفع كاش للمندوب (لو اختار كاش هيدفع سعر المنتجات بس، الشحن اتدفع أونلاين خلاص)
+  const amountDueOnDelivery = productPaymentMethod === "cash" ? subtotal : 0;
+
+  const total = shipping !== null ? subtotal + shipping : subtotal;
+
+  const update = (k: keyof Address, v: string) => {
+    setAddress((prev) => ({ ...prev, [k]: v }));
+    setErrors((prev) => ({ ...prev, [k]: undefined }));
+  };
+
+  const validate = () => {
+    const e: Partial<Record<keyof Address, string>> = {};
+    if (!address.fullName.trim()) e.fullName = "Full name is required";
+    if (!address.phone.trim()) e.phone = "Phone number is required";
+    else if (!/^01[0-9]{9}$/.test(address.phone.replace(/\s/g, "")))
+      e.phone = "Enter a valid Egyptian phone number (01X XXXX XXXX)";
+    if (!address.governorate) e.governorate = "Please select a governorate";
+    if (!address.city.trim()) e.city = "City / district is required";
+    if (!address.detailedAddress.trim())
+      e.detailedAddress = "Detailed address is required";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) {
+      showToast("Please fix the form errors", "error");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      if (saveAddress) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(address));
+      } else {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+
+      const orderId = Math.random().toString(36).slice(2, 10).toUpperCase();
+
+      const order: Order = {
+        orderId,
+        userId: user.uid,
+        userEmail: user.email,
+        items: items.map((i) => ({
+          ...i,
+          totalPrice: i.unitPrice * i.quantity,
+        })),
+        subtotal,
+        shipping: shipping || 0,
+        total,
+        grandTotal: subtotal + (shipping || 0),
+        placedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        address,
+        customer: {
+          name: address.fullName,
+          phone: address.phone,
+          governorate: address.governorate,
+          govLabel: address.governorate,
+          city: address.city,
+          address: address.detailedAddress,
+        },
+        status: "pending",
+        // حالة دفع سعر المنتجات (كاش أو أونلاين)
+        productPaymentMethod,
+        // المبلغ المطلوب دفعه أونلاين دلوقتي (شحن + احتمال سعر المنتجات)
+        amountDueOnline,
+        amountDueOnDelivery,
+        // حالة الدفع الأونلاين — تتحدث فعليًا من الـ webhook بعد كده
+        paymentStatus: "pending",
+      };
+
+      // نحفظ الأوردر دايمًا الأول (سواء كاش أو أونلاين) عشان يبقى ليه orderId نربط بيه الدفع
+      await saveOrder(user.uid, order);
+
+      // الشحن مبلغ إجباري أونلاين دايمًا، فبالتالي أي أوردر لازم يعدي على مرحلة الدفع الأونلاين
+      // (سواء كان المبلغ = الشحن بس، أو الشحن + سعر المنتجات)
+      const paymentRes = await fetch("/api/create-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId,
+          amount: amountDueOnline,
+          customer: {
+            firstName: address.fullName.split(" ")[0] || address.fullName,
+            lastName: address.fullName.split(" ").slice(1).join(" ") || "-",
+            email: user.email || "customer@drtrend.com",
+            phone: address.phone,
+          },
+        }),
+      });
+
+      if (!paymentRes.ok) {
+        throw new Error("Payment initiation failed");
+      }
+
+      const { iframeUrl } = await paymentRes.json();
+
+      // متمسحش السلة هنا ولا تعرض رسالة نجاح — لسه الدفع منجزش فعليًا
+      // هيتمسح في صفحة /checkout/success بعد تأكيد الدفع
+      window.location.href = iframeUrl;
+    } catch {
+      showToast("Something went wrong. Please try again.", "error");
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <h1 className="font-heading font-bold text-2xl md:text-3xl mb-8">
+        Checkout
+      </h1>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[60%_40%] gap-10">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-xl border border-gray-200 p-6 md:p-8 space-y-5"
+        >
+          <Field label="Full Name" error={errors.fullName}>
+            <input
+              type="text"
+              value={address.fullName}
+              onChange={(e) => update("fullName", e.target.value)}
+              placeholder="Ahmed Mohamed"
+              className={inputCls(!!errors.fullName)}
+            />
+          </Field>
+
+          <Field label="Phone Number" error={errors.phone}>
+            <input
+              type="tel"
+              value={address.phone}
+              onChange={(e) => update("phone", e.target.value)}
+              placeholder="01X XXXX XXXX"
+              className={inputCls(!!errors.phone)}
+            />
+          </Field>
+
+          <Field label="Governorate" error={errors.governorate}>
+            <select
+              value={address.governorate}
+              onChange={(e) => update("governorate", e.target.value)}
+              className={inputCls(!!errors.governorate)}
+            >
+              <option value="">Select governorate</option>
+              {GOVERNORATES.map((g) => (
+                <option key={g.name} value={g.name}>
+                  {g.name}
+                </option>
+              ))}
+            </select>
+            {shipping !== null && (
+              <p className="mt-2 text-xs text-primary font-medium">
+                Shipping: {formatEGP(shipping)}
+              </p>
+            )}
+          </Field>
+
+          <Field label="City / District" error={errors.city}>
+            <input
+              type="text"
+              value={address.city}
+              onChange={(e) => update("city", e.target.value)}
+              placeholder="Heliopolis, Maadi"
+              className={inputCls(!!errors.city)}
+            />
+          </Field>
+
+          <Field label="Detailed Address" error={errors.detailedAddress}>
+            <textarea
+              value={address.detailedAddress}
+              onChange={(e) => update("detailedAddress", e.target.value)}
+              rows={3}
+              placeholder="15 Hassan El-Ma'moun St., Building 3, Floor 2, Apt 7"
+              className={inputCls(!!errors.detailedAddress)}
+            />
+          </Field>
+
+          <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={saveAddress}
+              onChange={(e) => setSaveAddress(e.target.checked)}
+              className="w-4 h-4 accent-primary"
+            />
+            Save this address for future orders
+          </label>
+
+          {/* اختيار طريقة دفع سعر المنتجات — الشحن دايمًا أونلاين ومش جزء من الاختيار ده */}
+          <div className="border-t border-gray-100 pt-5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">
+              How would you like to pay for your items?
+            </p>
+            <p className="text-xs text-gray-500 mb-3">
+              Shipping ({shipping !== null ? formatEGP(shipping) : "—"}) is
+              always paid online to confirm your order.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <label
+                className={`flex items-center gap-3 border rounded-lg p-4 cursor-pointer transition-colors ${
+                  productPaymentMethod === "cash"
+                    ? "border-primary bg-primary/5"
+                    : "border-gray-200"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="productPaymentMethod"
+                  value="cash"
+                  checked={productPaymentMethod === "cash"}
+                  onChange={() => setProductPaymentMethod("cash")}
+                  className="w-4 h-4 accent-primary"
+                />
+                <div>
+                  <p className="text-sm font-semibold">Cash on Delivery</p>
+                  <p className="text-xs text-gray-500">
+                    Pay {formatEGP(subtotal)} to courier
+                  </p>
+                </div>
+              </label>
+
+              <label
+                className={`flex items-center gap-3 border rounded-lg p-4 cursor-pointer transition-colors ${
+                  productPaymentMethod === "online"
+                    ? "border-primary bg-primary/5"
+                    : "border-gray-200"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="productPaymentMethod"
+                  value="online"
+                  checked={productPaymentMethod === "online"}
+                  onChange={() => setProductPaymentMethod("online")}
+                  className="w-4 h-4 accent-primary"
+                />
+                <div>
+                  <p className="text-sm font-semibold">Pay Online Now</p>
+                  <p className="text-xs text-gray-500">
+                    Pay {formatEGP(subtotal)} with card/wallet
+                  </p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full bg-primary hover:bg-primary-dark disabled:opacity-60 text-white font-semibold py-4 rounded-full transition-colors flex items-center justify-center gap-2"
+          >
+            {submitting ? (
+              <>
+                <svg
+                  className="animate-spin"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M21 12a9 9 0 11-6.2-8.6" />
+                </svg>
+                Redirecting to payment...
+              </>
+            ) : (
+              <>Pay {formatEGP(amountDueOnline)} & Place Order</>
+            )}
+          </button>
+        </form>
+
+        {/* Order Summary */}
+        <div className="lg:sticky lg:top-24 h-fit">
+          <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <h2 className="font-heading font-bold text-lg mb-5">
+              Order Summary
+            </h2>
+            <div className="space-y-3 max-h-72 overflow-y-auto mb-4">
+              {items.map((i) => (
+                <div
+                  key={`${i.productId}-${i.color}-${i.size}`}
+                  className="flex gap-3"
+                >
+                  <img
+                    src={i.image}
+                    alt={i.name}
+                    className="w-14 h-14 rounded-lg object-cover bg-gray-100"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold truncate">{i.name}</p>
+                    <p className="text-xs text-gray-500">
+                      {i.color} / {i.size}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      Qty: {i.quantity}
+                    </p>
+                  </div>
+                  <p className="text-sm font-semibold">
+                    {formatEGP(i.unitPrice * i.quantity)}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="border-t border-gray-100 pt-4 space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Subtotal</span>
+                <span className="font-semibold">{formatEGP(subtotal)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Shipping</span>
+                <span className="font-semibold">
+                  {shipping !== null ? formatEGP(shipping) : "—"}
+                </span>
+              </div>
+            </div>
+            <div className="border-t border-gray-100 mt-4 pt-4 flex justify-between items-center">
+              <span className="font-heading font-bold">Total</span>
+              <span className="font-heading font-bold text-xl text-primary">
+                {formatEGP(total)}
+              </span>
+            </div>
+
+            {/* توضيح تقسيم الدفع */}
+            <div className="border-t border-gray-100 mt-4 pt-4 space-y-1.5 text-xs text-gray-500">
+              <div className="flex justify-between">
+                <span>Pay online now</span>
+                <span className="font-semibold text-primary">
+                  {formatEGP(amountDueOnline)}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>Pay on delivery</span>
+                <span className="font-semibold">
+                  {formatEGP(amountDueOnDelivery)}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 text-center">
+            <Link href="/cart" className="text-sm text-primary hover:underline">
+              ← Back to Cart
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function inputCls(error: boolean) {
+  return `w-full px-4 py-3 bg-white border ${
+    error ? "border-red-400" : "border-gray-200"
+  } rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors`;
+}
+
+function Field({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
+        {label}
+      </label>
+      {children}
+      {error && <p className="text-red-500 text-xs mt-1.5">{error}</p>}
+    </div>
+  );
+}
