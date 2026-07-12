@@ -22,7 +22,9 @@ yarn-error.log*
 
 # vercel
 .vercel
+drtrend-3b1f8-firebase-adminsdk-fbsvc-23503a38f9.json
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
