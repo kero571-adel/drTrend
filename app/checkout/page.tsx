@@ -29,9 +29,6 @@ const emptyAddress: Address = {
   detailedAddress: "",
 };
 
-// طريقة دفع سعر المنتجات (السلعة نفسها) — الشحن دايمًا بيتدفع أونلاين مقدمًا
-type ProductPaymentMethod = "cash" | "online";
-
 export default function Checkout() {
   const { items, subtotal, clearCart } = useCart();
   const { user, loading: authLoading } = useAuth();
@@ -41,10 +38,8 @@ export default function Checkout() {
   const [address, setAddress] = useState<Address>(emptyAddress);
   const [saveAddress, setSaveAddress] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [productPaymentMethod, setProductPaymentMethod] =
-    useState<ProductPaymentMethod>("cash");
   const [errors, setErrors] = useState<Partial<Record<keyof Address, string>>>(
-    {},
+    {}
   );
 
   // Load saved address
@@ -66,6 +61,8 @@ export default function Checkout() {
     if (!user) router.replace("/auth/login?returnUrl=/checkout");
     if (items.length === 0) router.replace("/cart");
   }, [user, authLoading, items.length, router]);
+
+  // تتبع حدث دخول صفحة الـ checkout لـ Meta Pixel
   useEffect(() => {
     if (!authLoading && user && items.length > 0) {
       initiateCheckout({
@@ -74,19 +71,13 @@ export default function Checkout() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // يتنفذ مرة واحدة بس لما الصفحة تفتح وتستقر شروطها
+  }, []);
+
   if (authLoading || !user || items.length === 0) return null;
 
   const shipping = address.governorate
     ? getShippingCost(address.governorate)
     : null;
-
-  // المبلغ اللي هيتدفع أونلاين دلوقتي: الشحن دايمًا + سعر المنتجات لو العميل اختار أونلاين
-  const amountDueOnline =
-    (shipping || 0) + (productPaymentMethod === "online" ? subtotal : 0);
-
-  // المبلغ اللي هيتدفع كاش للمندوب (لو اختار كاش هيدفع سعر المنتجات بس، الشحن اتدفع أونلاين خلاص)
-  const amountDueOnDelivery = productPaymentMethod === "cash" ? subtotal : 0;
 
   const total = shipping !== null ? subtotal + shipping : subtotal;
 
@@ -124,10 +115,8 @@ export default function Checkout() {
         localStorage.removeItem(STORAGE_KEY);
       }
 
-      const orderId = Math.random().toString(36).slice(2, 10).toUpperCase();
-
       const order: Order = {
-        orderId,
+        orderId: Math.random().toString(36).slice(2, 10).toUpperCase(),
         userId: user.uid,
         userEmail: user.email,
         items: items.map((i) => ({
@@ -150,46 +139,21 @@ export default function Checkout() {
           address: address.detailedAddress,
         },
         status: "pending",
-        // حالة دفع سعر المنتجات (كاش أو أونلاين)
-        productPaymentMethod,
-        // المبلغ المطلوب دفعه أونلاين دلوقتي (شحن + احتمال سعر المنتجات)
-        amountDueOnline,
-        amountDueOnDelivery,
-        // حالة الدفع الأونلاين — تتحدث فعليًا من الـ webhook بعد كده
+        // الطريقة العادية: كل حاجة كاش عند الاستلام، مفيش دفع أونلاين حاليًا
+        productPaymentMethod: "cash",
+        amountDueOnline: 0,
+        amountDueOnDelivery: total,
         paymentStatus: "pending",
       };
 
-      // نحفظ الأوردر دايمًا الأول (سواء كاش أو أونلاين) عشان يبقى ليه orderId نربط بيه الدفع
       await saveOrder(user.uid, order);
 
-      // الشحن مبلغ إجباري أونلاين دايمًا، فبالتالي أي أوردر لازم يعدي على مرحلة الدفع الأونلاين
-      // (سواء كان المبلغ = الشحن بس، أو الشحن + سعر المنتجات)
-      const paymentRes = await fetch("/api/create-payment", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId,
-          amount: amountDueOnline,
-          customer: {
-            firstName: address.fullName.split(" ")[0] || address.fullName,
-            lastName: address.fullName.split(" ").slice(1).join(" ") || "-",
-            email: user.email || "customer@drtrend.com",
-            phone: address.phone,
-          },
-        }),
-      });
-
-      if (!paymentRes.ok) {
-        throw new Error("Payment initiation failed");
-      }
-
-      const { iframeUrl } = await paymentRes.json();
-
-      // متمسحش السلة هنا ولا تعرض رسالة نجاح — لسه الدفع منجزش فعليًا
-      // هيتمسح في صفحة /checkout/success بعد تأكيد الدفع
-      window.location.href = iframeUrl;
+      clearCart();
+      showToast("Order placed successfully!", "success");
+      router.push("/orders?success=1");
     } catch {
       showToast("Something went wrong. Please try again.", "error");
+    } finally {
       setSubmitting(false);
     }
   };
@@ -275,62 +239,23 @@ export default function Checkout() {
             Save this address for future orders
           </label>
 
-          {/* اختيار طريقة دفع سعر المنتجات — الشحن دايمًا أونلاين ومش جزء من الاختيار ده */}
+          {/* ملحوظة الدفع الإلكتروني - قريبًا */}
           <div className="border-t border-gray-100 pt-5">
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">
-              How would you like to pay for your items?
-            </p>
-            <p className="text-xs text-gray-500 mb-3">
-              Shipping ({shipping !== null ? formatEGP(shipping) : "—"}) is
-              always paid online to confirm your order.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label
-                className={`flex items-center gap-3 border rounded-lg p-4 cursor-pointer transition-colors ${
-                  productPaymentMethod === "cash"
-                    ? "border-primary bg-primary/5"
-                    : "border-gray-200"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="productPaymentMethod"
-                  value="cash"
-                  checked={productPaymentMethod === "cash"}
-                  onChange={() => setProductPaymentMethod("cash")}
-                  className="w-4 h-4 accent-primary"
-                />
-                <div>
-                  <p className="text-sm font-semibold">Cash on Delivery</p>
-                  <p className="text-xs text-gray-500">
-                    Pay {formatEGP(subtotal)} to courier
-                  </p>
-                </div>
-              </label>
-
-              <label
-                className={`flex items-center gap-3 border rounded-lg p-4 cursor-pointer transition-colors ${
-                  productPaymentMethod === "online"
-                    ? "border-primary bg-primary/5"
-                    : "border-gray-200"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="productPaymentMethod"
-                  value="online"
-                  checked={productPaymentMethod === "online"}
-                  onChange={() => setProductPaymentMethod("online")}
-                  className="w-4 h-4 accent-primary"
-                />
-                <div>
-                  <p className="text-sm font-semibold">Pay Online Now</p>
-                  <p className="text-xs text-gray-500">
-                    Pay {formatEGP(subtotal)} with card/wallet
-                  </p>
-                </div>
-              </label>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <p className="text-sm text-gray-700">
+                💳 Online payment is coming soon. All orders are currently{" "}
+                <span className="font-semibold">Cash on Delivery</span>.
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                Want to pay online now?{" "}
+                <Link
+                  href="/contact"
+                  className="text-primary font-semibold hover:underline"
+                >
+                  Contact us
+                </Link>{" "}
+                and we'll help you out.
+              </p>
             </div>
           </div>
 
@@ -352,10 +277,10 @@ export default function Checkout() {
                 >
                   <path d="M21 12a9 9 0 11-6.2-8.6" />
                 </svg>
-                Redirecting to payment...
+                Placing Order...
               </>
             ) : (
-              <>Pay {formatEGP(amountDueOnline)} & Place Order</>
+              <>Place Order · {formatEGP(total)}</>
             )}
           </button>
         </form>
@@ -409,22 +334,6 @@ export default function Checkout() {
               <span className="font-heading font-bold text-xl text-primary">
                 {formatEGP(total)}
               </span>
-            </div>
-
-            {/* توضيح تقسيم الدفع */}
-            <div className="border-t border-gray-100 mt-4 pt-4 space-y-1.5 text-xs text-gray-500">
-              <div className="flex justify-between">
-                <span>Pay online now</span>
-                <span className="font-semibold text-primary">
-                  {formatEGP(amountDueOnline)}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>Pay on delivery</span>
-                <span className="font-semibold">
-                  {formatEGP(amountDueOnDelivery)}
-                </span>
-              </div>
             </div>
           </div>
           <div className="mt-4 text-center">
