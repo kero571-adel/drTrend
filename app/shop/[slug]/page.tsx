@@ -223,28 +223,16 @@ export default function ProductDetail() {
                   ))}
                 </ul>
               </Accordion>
-
-              <Accordion title="Shipping & Returns">
-                <p>
-                  Free shipping on orders over EGP 1,500. Standard delivery
-                  within 3–5 business days across Egypt.
-                </p>
-                <p className="mt-3">
-                  Hassle-free 30-day returns. If you&apos;re not satisfied,
-                  we&apos;ll make it right.
-                </p>
-              </Accordion>
             </div>
 
             {/* Trust badges */}
             <div className="mt-8 grid grid-cols-3 gap-3 pt-6 border-t border-gray-100">
-              <TrustBadge icon="🚚" title="Free Shipping" sub="EGP 1,500+" />
-              <TrustBadge icon="↩" title="30-Day Returns" sub="Hassle-free" />
+              <TrustBadge icon="🚚" title="Free Shipping" sub="EGP 4000+" />
+              <TrustBadge icon="↩" title="14-Day Returns" sub="Hassle-free" />
               <TrustBadge icon="🔒" title="Secure Checkout" sub="Encrypted" />
             </div>
           </div>
         </div>
-
         <SizeGuideModal
           open={sizeGuideOpen}
           onClose={() => setSizeGuideOpen(false)}

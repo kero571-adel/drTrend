@@ -109,7 +109,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
     languages: {
-      "ar-EG": `${SITE_URL}/ar`,
       "en-EG": SITE_URL,
     },
   },
@@ -158,7 +157,7 @@ export const metadata: Metadata = {
 
   // Google verification (replace with your actual token)
   verification: {
-    google: "YOUR_GOOGLE_SEARCH_CONSOLE_TOKEN",
+    google: "X9IzHqOQ4S-f7N9QRJGzWXIOZTXCg5-dgr9i_3JFjL0",
   },
 
   // App metadata
@@ -196,6 +195,7 @@ const organizationSchema = {
   },
   sameAs: [
     // Add your actual social media URLs here:
+    "https://www.facebook.com/share/1HQVqpvV7q/",
     // "https://www.facebook.com/drtrend",
     // "https://www.instagram.com/drtrend",
   ],

@@ -33,7 +33,7 @@ export default function Footer() {
 
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-xs text-gray-500">
-            © 2024 Dr Trend. Premium Medical Apparel.
+            © 2026 Dr Trend. Premium Medical Apparel.
           </p>
         </div>
       </div>

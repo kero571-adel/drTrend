@@ -1,14 +1,67 @@
 "use client";
-
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-const SIZE_DATA = [
-  { size: "XS", chest: "80–84", waist: "60–64", hip: "86–90", length: "62" },
-  { size: "S", chest: "84–88", waist: "64–68", hip: "90–94", length: "63" },
-  { size: "M", chest: "88–92", waist: "68–72", hip: "94–98", length: "64" },
-  { size: "L", chest: "92–96", waist: "72–76", hip: "98–102", length: "65" },
-  { size: "XL", chest: "96–100", waist: "76–80", hip: "102–106", length: "66" },
-  { size: "XXL", chest: "100–104", waist: "80–84", hip: "106–110", length: "67" },
+const SCRUB_SIZE_DATA = [
+  {
+    size: "M",
+    chest: "54 cm",
+    topLength: "70 cm",
+    waist: "38–48 cm",
+    pantsLength: "100 cm",
+  },
+  {
+    size: "L",
+    chest: "57 cm",
+    topLength: "72 cm",
+    waist: "40–50 cm",
+    pantsLength: "102 cm",
+  },
+  {
+    size: "XL",
+    chest: "60 cm",
+    topLength: "74 cm",
+    waist: "42–52 cm",
+    pantsLength: "104 cm",
+  },
+  {
+    size: "XXL",
+    chest: "63 cm",
+    topLength: "76 cm",
+    waist: "44–54 cm",
+    pantsLength: "106 cm",
+  },
+];
+
+const COAT_SIZE_DATA = [
+  {
+    size: "M",
+    chest: "56 cm",
+    length: "92 cm",
+    sleeve: "62 cm",
+    shoulder: "45 cm",
+  },
+  {
+    size: "L",
+    chest: "58 cm",
+    length: "94 cm",
+    sleeve: "63 cm",
+    shoulder: "46 cm",
+  },
+  {
+    size: "XL",
+    chest: "60 cm",
+    length: "96 cm",
+    sleeve: "64 cm",
+    shoulder: "47 cm",
+  },
+  {
+    size: "XXL",
+    chest: "62 cm",
+    length: "98 cm",
+    sleeve: "65 cm",
+    shoulder: "48 cm",
+  },
 ];
 
 interface Props {
@@ -17,6 +70,8 @@ interface Props {
 }
 
 export default function SizeGuideModal({ open, onClose }: Props) {
+  const pathname = usePathname();
+  const isCoat = pathname.toLowerCase().includes("coat");
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -56,29 +111,52 @@ export default function SizeGuideModal({ open, onClose }: Props) {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-3 pr-4 font-semibold text-gray-500 uppercase text-xs">Size</th>
-                <th className="text-left py-3 pr-4 font-semibold text-gray-500 uppercase text-xs">Chest</th>
-                <th className="text-left py-3 pr-4 font-semibold text-gray-500 uppercase text-xs">Waist</th>
-                <th className="text-left py-3 pr-4 font-semibold text-gray-500 uppercase text-xs">Hip</th>
-                <th className="text-left py-3 font-semibold text-gray-500 uppercase text-xs">Length</th>
-              </tr>
+              {isCoat ? (
+                <tr>
+                  <th>Size</th>
+                  <th>Chest</th>
+                  <th>Length</th>
+                  <th>Sleeve</th>
+                  <th>Shoulder</th>
+                </tr>
+              ) : (
+                <tr>
+                  <th>Size</th>
+                  <th>Chest</th>
+                  <th>Waist</th>
+                  <th>Top Length</th>
+                  <th>Pants Length</th>
+                </tr>
+              )}
             </thead>
             <tbody>
-              {SIZE_DATA.map((row) => (
-                <tr key={row.size} className="border-b border-gray-100">
-                <td className="py-3 pr-4 font-semibold">{row.size}</td>
-                <td className="py-3 pr-4 text-gray-600">{row.chest}</td>
-                <td className="py-3 pr-4 text-gray-600">{row.waist}</td>
-                <td className="py-3 pr-4 text-gray-600">{row.hip}</td>
-                <td className="py-3 text-gray-600">{row.length}</td>
-              </tr>
-            ))}
+              {isCoat
+                ? COAT_SIZE_DATA.map((row) => (
+                    <tr key={row.size} className="border-b border-gray-100">
+                      <td className="py-3 pr-4 font-semibold text-center">{row.size}</td>
+                      <td className="py-3 pr-4 text-gray-600 text-center">{row.chest}</td>
+                      <td className="py-3 pr-4 text-gray-600 text-center">{row.length}</td>
+                      <td className="py-3 pr-4 text-gray-600 text-center">{row.sleeve}</td>
+                      <td className="py-3 text-gray-600 text-center">{row.shoulder}</td>
+                    </tr>
+                  ))
+                : SCRUB_SIZE_DATA.map((row) => (
+                    <tr key={row.size} className="border-b border-gray-100">
+                      <td className="py-3 pr-4 font-semibold text-center">{row.size}</td>
+                      <td className="py-3 pr-4 text-gray-600 text-center">{row.chest}</td>
+                      <td className="py-3 pr-4 text-gray-600 text-center">{row.waist}</td>
+                      <td className="py-3 pr-4 text-gray-600 text-center">
+                        {row.topLength}
+                      </td>
+                      <td className="py-3 text-gray-600 text-center">{row.pantsLength}</td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
         <p className="mt-6 text-xs text-gray-500 italic">
-          <span className="font-semibold">Tip:</span> If you're between sizes, we recommend sizing up for a more comfortable fit.
+          <span className="font-semibold">Tip:</span> If you're between sizes,
+          we recommend sizing up for a more comfortable fit.
         </p>
       </div>
     </div>

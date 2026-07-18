@@ -75,7 +75,7 @@ export default function Home() {
         </div>
 
         <div
-          className="absolute bottom-14 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/80 cursor-pointer hover:text-white transition-colors"
+          className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/80 cursor-pointer hover:text-white transition-colors"
           onClick={handleScrollDown}
         >
           <span className="text-xs uppercase tracking-widest">
@@ -123,99 +123,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Features ─────────────────────────────────────────────────────────── */}
-      <section className="bg-dark-section text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-0">
-            <Feature
-              icon={
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 2l8 4v6c0 5-3.5 9.3-8 10-4.5-.7-8-5-8-10V6l8-4z" />
-                  <polyline points="9 12 11 14 15 10" />
-                </svg>
-              }
-              title="Premium Fabric"
-              description="Advanced moisture-wicking and anti-microbial technology."
-              border
-            />
-            <Feature
-              icon={
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="1" y="3" width="15" height="13" />
-                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
-                  <circle cx="5.5" cy="18.5" r="2.5" />
-                  <circle cx="18.5" cy="18.5" r="2.5" />
-                </svg>
-              }
-              title="Free Delivery"
-              description="Complimentary shipping on all orders over EGP 1,500."
-              border
-            />
-            <Feature
-              icon={
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="1 4 1 10 7 10" />
-                  <path d="M3.51 15a9 9 0 102.13-9.36L1 10" />
-                  <polyline points="23 20 23 14 17 14" />
-                  <path d="M20.49 9A9 9 0 1018.36 18.36L23 14" />
-                </svg>
-              }
-              title="Easy Returns"
-              description="Hassle-free 14-day return policy for peace of mind."
-            />
-          </div>
-        </div>
-      </section>
     </>
-  );
-}
-
-function Feature({
-  icon,
-  title,
-  description,
-  border,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  border?: boolean;
-}) {
-  return (
-    <div
-      className={`flex flex-col items-center text-center px-4 md:px-8 ${
-        border ? "md:border-r md:border-white/10" : ""
-      }`}
-    >
-      <div className="w-12 h-12 text-primary flex items-center justify-center mb-4">
-        {icon}
-      </div>
-      <h3 className="font-heading font-bold text-lg md:text-xl mb-2">
-        {title}
-      </h3>
-      <p className="text-gray-400 text-sm max-w-xs">{description}</p>
-    </div>
   );
 }

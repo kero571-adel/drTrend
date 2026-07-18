@@ -24,13 +24,14 @@ export default function Shop() {
   const { addItem } = useCart();
   const { showToast } = useToast();
 
-  const allSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+  const allSizes = ["M", "L", "XL", "XXL"];
   const allColors = [
     { name: "black", hex: "#111111" },
     { name: "white", hex: "#F8F8F8" },
     { name: "light-blue", hex: "#A6D5FF" },
     { name: "olive", hex: "#4A5C3F" },
     { name: "navy", hex: "#1B3A6B" },
+    { name: "Burgundy", hex: "#6E1423" },
   ];
 
   const toggleColor = (color: string) =>
@@ -371,7 +372,7 @@ function FilterSidebar(props: SidebarProps) {
         </div>
       </FilterSection>
 
-      <FilterSection title="Size">
+      {/* <FilterSection title="Size">
         <div className="flex flex-wrap gap-2">
           {props.allSizes.map((s) => (
             <button
@@ -387,7 +388,7 @@ function FilterSidebar(props: SidebarProps) {
             </button>
           ))}
         </div>
-      </FilterSection>
+      </FilterSection> */}
     </div>
   );
 }

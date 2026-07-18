@@ -6,7 +6,7 @@ const SCRUB_FABRIC =
 const COAT_FABRIC =
   "Crafted from premium gabardine fabric with a water-repellent, tear-resistant finish, engineered to stand up to a doctor's toughest shifts — including splashes and spills. Machine wash cold. Tumble dry low. Do not bleach.";
 
-const STANDARD_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const STANDARD_SIZES = ["M", "L", "XL", "XXL"];
 
 // ─── Color Definitions ────────────────────────────────────────────────────────
 const NAVY = { name: "Surgical Navy", hex: "#1B3A6B" };
@@ -15,6 +15,21 @@ const OLIVE = { name: "Olive Green", hex: "#4A5C3F" };
 const BLACK = { name: "Classic Black", hex: "#111111" };
 const WHITE = { name: "Pure White", hex: "#F8F8F8" };
 const BURGUNDY = { name: "Burgundy", hex: "#6E1423" };
+// =============================================================================
+//  THE ESSENTIAL DENTAL COAT – Unisex
+// =============================================================================
+
+const DENTAL_COAT_FEATURES = [
+  "Modern hip-length design",
+  "Tailored slim-fit silhouette",
+  "Classic notched lapel collar",
+  "Three practical pockets (one chest, two lower)",
+  "Back vent for unrestricted movement",
+  "Premium wrinkle-resistant gabardine fabric",
+];
+
+const DENTAL_COAT_LONG =
+  "Designed specifically for modern dental professionals, The Essential Dental Coat delivers a clean, contemporary look without sacrificing comfort. Its shorter hip-length silhouette allows unrestricted movement throughout busy clinical days while maintaining a sharp professional appearance. Crafted from premium gabardine fabric with a durable water-repellent finish, it resists wrinkles, splashes, and daily wear, making it an ideal choice for dentists who demand both style and performance.";
 
 // ─── Helper: placeholder image until real ones are added ──────────────────────
 const img = (seed: string) => seed;
@@ -109,7 +124,7 @@ export const products: Product[] = [
         images: [
           img("/productImage/The Elegance Wrap Set/surgical Navy_shoot1.png"),
           img("/productImage/The Elegance Wrap Set/surgical Navy_shoot2.png"),
-          img("/productImage/The Elegance Wrap Set/surgical Navy_shoot3.png"),
+          img("/productImage/The Elegance Wrap Set/surgical Navy_shoot 3.png"),
         ],
       },
     ],
@@ -117,7 +132,7 @@ export const products: Product[] = [
     images: [
       img("/productImage/The Elegance Wrap Set/surgical Navy_shoot1.png"),
       img("/productImage/The Elegance Wrap Set/surgical Navy_shoot2.png"),
-      img("/productImage/The Elegance Wrap Set/surgical Navy_shoot3.png"),
+      img("/productImage/The Elegance Wrap Set/surgical Navy_shoot 3.png"),
     ],
     isBestSeller: false,
     isNewArrival: false,
@@ -746,16 +761,59 @@ export const products: Product[] = [
       {
         ...WHITE,
         images: [
-          img("/productImage/ChatGPT Image 19 يونيو 2026، 01_48_28 م.png"),
+          img("/productImage/coat/font coat.png"),
+          img("/productImage/coat/back coat.png"),
         ],
       },
     ],
     sizes: STANDARD_SIZES,
-    images: [],
+    images: [
+      img("/productImage/coat/font coat.png"),
+      img("/productImage/coat/back coat.png"),
+    ],
     isBestSeller: true,
     isNewArrival: false,
     stock: 50,
     createdAt: "2026-06-10",
+  },
+
+  // ── THE dentist  WHITE COAT ──────────────────────────────────────────────
+
+  {
+    id: "dentist-coat",
+    name: "The dentist Dental Coat",
+    slug: "dentist-dental-coat",
+    category: "tops",
+    gender: "unisex",
+    price: 599,
+
+    description:
+      "Modern hip-length dental coat designed for comfort, mobility, and a clean professional appearance.",
+
+    longDescription: DENTAL_COAT_LONG,
+
+    features: DENTAL_COAT_FEATURES,
+
+    fabricAndCare: COAT_FABRIC,
+
+    colors: [
+      {
+        ...WHITE,
+        images: [
+          img("/productImage/dentist is coat/front coat.jpeg"),
+          img("/productImage/dentist is coat/back coat.jpeg"),
+        ],
+      },
+    ],
+
+    sizes: STANDARD_SIZES,
+
+    images: [img("/productImage/dentist is coat/front coat.jpeg")],
+
+    isBestSeller: true,
+    isNewArrival: true,
+    stock: 50,
+    createdAt: "2026-07-17",
   },
 ];
 
