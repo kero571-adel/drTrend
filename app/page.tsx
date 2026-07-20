@@ -54,28 +54,16 @@ export default function Home() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 to-black/30" />
 
-        <div className="relative z-10 text-center px-4 max-w-4xl">
-          <span className="inline-block text-[#0fffe1] font-semibold text-xs md:text-sm tracking-[0.3em] uppercase mb-4">
-            You Save Lives.
-          </span>
-          <h1 className="font-heading font-bold text-white text-3xl lg:text-7xl leading-[1.05]">
-            Look the Part.
-            <br />
-            Premium scrubs and medical coats,
-          </h1>
-          <p className="mt-6 text-white/90 text-base md:text-lg max-w-2xl mx-auto">
-            crafted for Egypt&apos;s finest doctors and nurses.
-          </p>
+        {/* <div className="relative z-10 text-center px-4 max-w-4xl">
           <Link
             href="/shop"
-            className="inline-block mt-5 px-8 py-3.5 bg-primary text-white font-semibold rounded-full hover:bg-primary-dark transition-colors"
+            className="inline-block mt-10 px-8 py-3.5 bg-primary text-white font-semibold rounded-full hover:bg-primary-dark transition-colors"
           >
             Shop Now
           </Link>
-        </div>
-
+        </div> */}
         <div
-          className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/80 cursor-pointer hover:text-white transition-colors"
+          className="absolute bottom-15 md:bottom-15 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/80 cursor-pointer hover:text-white transition-colors"
           onClick={handleScrollDown}
         >
           <span className="text-xs uppercase tracking-widest">

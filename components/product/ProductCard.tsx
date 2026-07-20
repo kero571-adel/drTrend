@@ -9,9 +9,16 @@ interface Props {
   onAddToCart?: () => void;
 }
 
+const DISCOUNT_PERCENT = 30;
+
 export default function ProductCard({ product, onAddToCart }: Props) {
   const firstColor = product.colors[0];
   const image = firstColor?.images[0] || product.images[0] || "";
+
+  // السعر الموجود في product.price هو السعر بعد الخصم
+  // بنحسب السعر الأصلي قبل الخصم عكسياً
+  const discountedPrice = product.price;
+  const originalPrice = discountedPrice / (1 - DISCOUNT_PERCENT / 100);
 
   return (
     <div className="group flex flex-col">
@@ -48,9 +55,14 @@ export default function ProductCard({ product, onAddToCart }: Props) {
             {product.name}
           </h3>
         </Link>
-        <p className="text-primary font-semibold text-sm mt-1">
-          {formatEGP(product.price)}
-        </p>
+        <div className="flex items-center gap-2 mt-1">
+          <p className="text-primary font-semibold text-sm">
+            {formatEGP(discountedPrice)}
+          </p>
+          <p className="text-gray-400 text-xs line-through">
+            {formatEGP(originalPrice)}
+          </p>
+        </div>
         <Link href={`/shop/${product.slug}`} className="block">
           <button className="mt-3 w-full bg-gray-900 hover:bg-black text-white text-xs font-semibold py-2.5 rounded-md transition-colors cursor-pointer">
             Show Details
