@@ -122,8 +122,8 @@ export const products: Product[] = [
       {
         ...NAVY,
         images: [
-          img("/productImage/The Elegance Wrap Set/surgical Navy_shoot1.png"),
-          img("/productImage/The Elegance Wrap Set/surgical Navy_shoot2.png"),
+          img("/productImage/The Elegance Wrap Set/Surgical Navy_shoot1.png"),
+          img("/productImage/The Elegance Wrap Set/Surgical Navy_shoot2.png"),
           img("/productImage/The Elegance Wrap Set/surgical Navy_shoot 3.png"),
         ],
       },

@@ -326,7 +326,7 @@ interface SidebarProps {
 }
 function FilterSidebar(props: SidebarProps) {
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-200 sticky top-24">
+    <div className="bg-white p-6 rounded-xl border border-gray-200 sticky top-14">
       <div className="flex items-center justify-between mb-6">
         <h3 className="font-heading font-bold text-lg">Filters</h3>
         <button
