@@ -35,52 +35,61 @@ export default function Home() {
 
   return (
     <>
-      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
+      <section className="relative w-full h-[calc(100svh-4rem)] overflow-hidden bg-[#f5ede6]">
+        {/* Mobile */}
         <Image
           src="/hero/imageHero.png"
-          alt="hero"
-          width={1920}
-          height={1080}
+          alt="Hero"
+          fill
           priority
-          className="md:hidden absolute inset-0 w-full h-full object-cover"
+          sizes="100vw"
+          className="md:hidden object-contain object-center"
         />
+
+        {/* Desktop */}
         <Image
           src="/hero/imageHeroDesktop.png"
-          alt="hero"
-          width={1920}
-          height={1080}
+          alt="Hero"
+          fill
           priority
-          className="hidden md:block absolute inset-0 w-full h-full object-cover"
+          sizes="100vw"
+          className="hidden md:block object-contain object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 to-black/30" />
 
-        {/* <div className="relative z-10 text-center px-4 max-w-4xl">
-          <Link
-            href="/shop"
-            className="inline-block mt-10 px-8 py-3.5 bg-primary text-white font-semibold rounded-full hover:bg-primary-dark transition-colors"
-          >
-            Shop Now
-          </Link>
-        </div> */}
-        <div
-          className="absolute bottom-15 md:bottom-15 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/80 cursor-pointer hover:text-white transition-colors"
+        {/* Scroll */}
+        <button
           onClick={handleScrollDown}
+          className="
+      absolute
+      bottom-9
+      md:bottom-4
+      left-1/2
+      -translate-x-1/2
+      z-20
+      flex
+      flex-col
+      items-center
+      text-gray-700
+      hover:text-black
+      transition
+    "
         >
-          <span className="text-xs uppercase tracking-widest">
+          <span className="text-[11px] md:text-xs uppercase tracking-[0.3em]">
             Scroll to explore
           </span>
+
           <svg
-            width="20"
-            height="20"
+            width="22"
+            height="22"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
-            className="animate-bounceDown"
+            className="mt-1 animate-bounceDown"
           >
             <polyline points="6 9 12 15 18 9" />
           </svg>
-        </div>
+        </button>
       </section>
 
       {/* Best Sellers ─────────────────────────────────────────────────────── */}

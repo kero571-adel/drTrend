@@ -250,13 +250,13 @@ function OrdersContent() {
                 {/* Card header */}
                 <div className="p-5 md:p-6">
                   <div className="flex gap-4">
-                    {order.items[0]?.image && (
+                    {/* {order.items[0]?.image && (
                       <img
                         src={order.items[0].image}
                         alt={order.items[0].name}
                         className="w-16 h-16 md:w-20 md:h-20 rounded-lg object-cover bg-gray-100 flex-shrink-0"
                       />
-                    )}
+                    )} */}
 
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-wrap items-start justify-between gap-2">

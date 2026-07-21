@@ -157,7 +157,7 @@ export const products: Product[] = [
         images: [
           img("/productImage/The Elegance Wrap Set/Light Blue_Shoot1.png"),
           img("/productImage/The Elegance Wrap Set/Light Blue_Shoot2.png"),
-          img("/productImage/The Elegance Wrap Set/Light Blue_Shoot 3.png"),
+          img("/productImage/The Elegance Wrap Set/Light Blue_shoot 3.png"),
         ],
       },
     ],
@@ -165,7 +165,7 @@ export const products: Product[] = [
     images: [
       img("/productImage/The Elegance Wrap Set/Light Blue_Shoot1.png"),
       img("/productImage/The Elegance Wrap Set/Light Blue_Shoot2.png"),
-      img("/productImage/The Elegance Wrap Set/Light Blue_Shoot 3.png"),
+      img("/productImage/The Elegance Wrap Set/Light Blue_shoot 3.png"),
     ],
     isBestSeller: true,
     isNewArrival: false,
