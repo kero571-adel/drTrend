@@ -39,7 +39,7 @@ export default function Checkout() {
   const [saveAddress, setSaveAddress] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof Address, string>>>(
-    {}
+    {},
   );
 
   // Load saved address
@@ -243,10 +243,9 @@ export default function Checkout() {
           <div className="border-t border-gray-100 pt-5">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <p className="text-sm text-gray-700">
-                💳 Online payment is coming soon. All orders are currently{" "}
-                <span className="font-semibold">Cash on Delivery</span>.
+                💳 Online payment on website is coming soon.
               </p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-black-500 mt-1">
                 Want to pay online now?{" "}
                 <Link
                   href="/contact"

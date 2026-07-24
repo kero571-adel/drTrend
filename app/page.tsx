@@ -74,7 +74,10 @@ export default function Home() {
       transition
     "
         >
-          <span className="text-[11px] md:text-xs uppercase tracking-[0.3em]">
+          <span
+            className="text-[11px] md:text-xs uppercase tracking-[0.3em]"
+            style={{ fontWeight: "bold" }}
+          >
             Scroll to explore
           </span>
 
@@ -103,7 +106,7 @@ export default function Home() {
             </div>
             <Link
               href="/shop"
-              className=" sm:inline-flex items-center px-5 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-full hover:border-primary hover:text-primary transition-colors"
+              className="sm:inline-flex items-center px-5 py-2 text-white text-sm font-medium rounded-full hover:border-primary transition-colors bg-primary"
             >
               Shop All
             </Link>

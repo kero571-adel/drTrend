@@ -9,6 +9,41 @@ import { formatEGP } from "@/lib/shipping";
 
 type SortKey = "featured" | "price-asc" | "price-desc" | "new";
 
+// بياخد اسم الكوليكشن من اسم المنتج (اللي قبل "–")
+// مثال: "The Elegance Wrap Set – Surgical Navy" => "The Elegance Wrap Set"
+function getCollectionKey(name: string): string {
+  const idx = name.indexOf("–");
+  return idx === -1 ? name.trim() : name.slice(0, idx).trim();
+}
+
+// Round-Robin: بياخد منتج واحد بالتبادل من كل كوليكشن
+// بدل ما كل كوليكشن يجيب كل ألوانه ورا بعض دفعة واحدة
+function interleaveByCollection<T extends { name: string }>(items: T[]): T[] {
+  const groups = new Map<string, T[]>();
+  for (const item of items) {
+    const key = getCollectionKey(item.name);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(item);
+  }
+
+  const buckets = Array.from(groups.values());
+  const result: T[] = [];
+  let added = true;
+
+  while (added) {
+    added = false;
+    for (const bucket of buckets) {
+      const next = bucket.shift();
+      if (next) {
+        result.push(next);
+        added = true;
+      }
+    }
+  }
+
+  return result;
+}
+
 export default function Shop() {
   const [gender, setGender] = useState<"all" | "men" | "women" | "unisex">(
     "all"
@@ -24,6 +59,10 @@ export default function Shop() {
   const { addItem } = useCart();
   const { showToast } = useToast();
 
+  // ترتيب "Featured" ثابت وذكي: كل كوليكشن بياخد نصيبه بالتبادل
+  // بدل ما تبقى كل ألوان المنتج ورا بعض والكوليكشن اللي في آخر الملف يتحط في آخر الصفحات
+  const orderedProducts = useMemo(() => interleaveByCollection(products), []);
+
   const allSizes = ["M", "L", "XL", "XXL"];
   const allColors = [
     { name: "black", hex: "#111111" },
@@ -33,7 +72,6 @@ export default function Shop() {
     { name: "navy", hex: "#1B3A6B" },
     { name: "Burgundy", hex: "#6E1423" },
   ];
-
   const toggleColor = (color: string) =>
     setSelectedColors((p) =>
       p.includes(color) ? p.filter((x) => x !== color) : [...p, color]
@@ -50,7 +88,7 @@ export default function Shop() {
   };
 
   const filtered = useMemo(() => {
-    let res = products.filter((p) => {
+    let res = orderedProducts.filter((p) => {
       if (gender !== "all" && p.gender !== gender && p.gender !== "unisex")
         return false;
       if (
@@ -63,6 +101,7 @@ export default function Shop() {
       if (p.price < priceMin || p.price > priceMax) return false;
       return true;
     });
+    // ترتيب السعر أو الجديد بيبقى له الأولوية لو المستخدم اختاره
     if (sort === "price-asc") res = [...res].sort((a, b) => a.price - b.price);
     else if (sort === "price-desc")
       res = [...res].sort((a, b) => b.price - a.price);
@@ -71,7 +110,7 @@ export default function Shop() {
         (a, b) => (b.isNewArrival ? 1 : 0) - (a.isNewArrival ? 1 : 0)
       );
     return res;
-  }, [gender, selectedColors, sizes, priceMin, priceMax, sort]);
+  }, [orderedProducts, gender, selectedColors, sizes, priceMin, priceMax, sort]);
 
   const perPage = 12;
   const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));

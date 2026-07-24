@@ -105,6 +105,9 @@ export default function ProductDetail() {
       category: product.category,
     });
   }, [product.id]);
+  const DISCOUNT_PERCENT = 30;
+  const discountedPrice = product.price;
+  const originalPrice = discountedPrice / (1 - DISCOUNT_PERCENT / 100);
   return (
     <>
       <ProductJsonLd product={product} />
@@ -128,9 +131,15 @@ export default function ProductDetail() {
             <h1 className="font-heading font-bold text-2xl md:text-3xl text-gray-900 mb-3">
               {product.name}
             </h1>
-            <p className="text-primary font-heading font-bold text-2xl md:text-3xl mb-5">
-              {formatEGP(product.price)}
-            </p>
+
+            <div className="flex items-center gap-2 mb-5">
+              <p className="text-primary font-heading font-bold text-2xl md:text-3xl mr-2">
+                {formatEGP(discountedPrice)}
+              </p>
+              <p className="text-gray-400 font-heading font-bold text-2xl md:text-3xl line-through">
+                {formatEGP(originalPrice)}
+              </p>
+            </div>
             <p className="text-gray-600 text-sm md:text-base leading-relaxed mb-8">
               {product.description}
             </p>

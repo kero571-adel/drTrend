@@ -17,7 +17,7 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -148,7 +148,7 @@ export default function ContactPage() {
                 <div className="flex gap-4 flex-wrap">
                   {/* Facebook */}
                   <a
-                    href="#"
+                    href="https://www.facebook.com/share/1VN95rkRB2/"
                     className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-blue-600 text-white hover:bg-blue-700 hover:scale-110 transition-all shadow-md hover:shadow-lg"
                     aria-label="Facebook"
                   >
@@ -157,7 +157,7 @@ export default function ContactPage() {
 
                   {/* TikTok */}
                   <a
-                    href="#"
+                    href="https://www.tiktok.com/@dr.trend77?_r=1&_t=ZS-98J9eITtink"
                     className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-black text-white hover:scale-110 transition-all shadow-md hover:shadow-lg"
                     aria-label="TikTok"
                   >
@@ -166,7 +166,7 @@ export default function ContactPage() {
 
                   {/* YouTube */}
                   <a
-                    href="#"
+                    href="https://youtube.com/@dr.beshoyreyad?si=xdtwdR0dxo46I5Cw"
                     className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-red-600 text-white hover:bg-red-700 hover:scale-110 transition-all shadow-md hover:shadow-lg"
                     aria-label="YouTube"
                   >
@@ -174,13 +174,13 @@ export default function ContactPage() {
                   </a>
 
                   {/* Instagram */}
-                  <a
+                  {/* <a
                     href="#"
                     className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-gradient-to-r from-pink-500 to-pink-600 text-white hover:from-pink-600 hover:to-pink-700 hover:scale-110 transition-all shadow-md hover:shadow-lg"
                     aria-label="Instagram"
                   >
                     <FaInstagram className="w-5 h-5" />
-                  </a>
+                  </a> */}
                 </div>
               </div>
             </div>
