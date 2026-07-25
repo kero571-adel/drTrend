@@ -65,6 +65,8 @@ const SEO_KEYWORDS = [
   "skrab doctor",
   "skrab masry",
   "balta doctor",
+  "سكراب رويال",
+  "سكراب رجالى",
   "ملابس طبية",
   "سكراب طبي",
   "سكراب دكتور",
