@@ -35,32 +35,32 @@ const SCRUB_SIZE_DATA = [
 
 const COAT_SIZE_DATA = [
   {
+    size: "S",
+    chestWidth: "58 cm",
+    coatCircumference: "116 cm",
+    suitableHeight: "160–170 cm",
+    approximateWeight: "50–65 kg",
+  },
+  {
     size: "M",
-    chest: "56 cm",
-    length: "92 cm",
-    sleeve: "62 cm",
-    shoulder: "45 cm",
+    chestWidth: "60 cm",
+    coatCircumference: "120 cm",
+    suitableHeight: "165–175 cm",
+    approximateWeight: "60–75 kg",
   },
   {
     size: "L",
-    chest: "58 cm",
-    length: "94 cm",
-    sleeve: "63 cm",
-    shoulder: "46 cm",
+    chestWidth: "65 cm",
+    coatCircumference: "130 cm",
+    suitableHeight: "170–180 cm",
+    approximateWeight: "75–95 kg",
   },
   {
     size: "XL",
-    chest: "60 cm",
-    length: "96 cm",
-    sleeve: "64 cm",
-    shoulder: "47 cm",
-  },
-  {
-    size: "XXL",
-    chest: "62 cm",
-    length: "98 cm",
-    sleeve: "65 cm",
-    shoulder: "48 cm",
+    chestWidth: "70 cm",
+    coatCircumference: "140 cm",
+    suitableHeight: "175–190 cm",
+    approximateWeight: "90–115 kg",
   },
 ];
 
@@ -114,10 +114,10 @@ export default function SizeGuideModal({ open, onClose }: Props) {
               {isCoat ? (
                 <tr>
                   <th>Size</th>
-                  <th>Chest</th>
-                  <th>Length</th>
-                  <th>Sleeve</th>
-                  <th>Shoulder</th>
+                  <th>Chest Width</th>
+                  <th>Coat Circumference</th>
+                  <th>Suitable Height</th>
+                  <th>Approx. Weight</th>
                 </tr>
               ) : (
                 <tr>
@@ -133,22 +133,44 @@ export default function SizeGuideModal({ open, onClose }: Props) {
               {isCoat
                 ? COAT_SIZE_DATA.map((row) => (
                     <tr key={row.size} className="border-b border-gray-100">
-                      <td className="py-3 pr-4 font-semibold text-center">{row.size}</td>
-                      <td className="py-3 pr-4 text-gray-600 text-center">{row.chest}</td>
-                      <td className="py-3 pr-4 text-gray-600 text-center">{row.length}</td>
-                      <td className="py-3 pr-4 text-gray-600 text-center">{row.sleeve}</td>
-                      <td className="py-3 text-gray-600 text-center">{row.shoulder}</td>
+                      <td className="py-3 pr-4 font-semibold text-center">
+                        {row.size}
+                      </td>
+
+                      <td className="py-3 pr-4 text-gray-600 text-center">
+                        {row.chestWidth}
+                      </td>
+
+                      <td className="py-3 pr-4 text-gray-600 text-center">
+                        {row.coatCircumference}
+                      </td>
+
+                      <td className="py-3 pr-4 text-gray-600 text-center">
+                        {row.suitableHeight}
+                      </td>
+
+                      <td className="py-3 text-gray-600 text-center">
+                        {row.approximateWeight}
+                      </td>
                     </tr>
                   ))
                 : SCRUB_SIZE_DATA.map((row) => (
                     <tr key={row.size} className="border-b border-gray-100">
-                      <td className="py-3 pr-4 font-semibold text-center">{row.size}</td>
-                      <td className="py-3 pr-4 text-gray-600 text-center">{row.chest}</td>
-                      <td className="py-3 pr-4 text-gray-600 text-center">{row.waist}</td>
+                      <td className="py-3 pr-4 font-semibold text-center">
+                        {row.size}
+                      </td>
+                      <td className="py-3 pr-4 text-gray-600 text-center">
+                        {row.chest}
+                      </td>
+                      <td className="py-3 pr-4 text-gray-600 text-center">
+                        {row.waist}
+                      </td>
                       <td className="py-3 pr-4 text-gray-600 text-center">
                         {row.topLength}
                       </td>
-                      <td className="py-3 text-gray-600 text-center">{row.pantsLength}</td>
+                      <td className="py-3 text-gray-600 text-center">
+                        {row.pantsLength}
+                      </td>
                     </tr>
                   ))}
             </tbody>

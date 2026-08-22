@@ -4,8 +4,7 @@ import type { Product } from "@/types";
 const SCRUB_FABRIC =
   "Made from premium imported Angelica fabric — the finest quality available on the market. Fade-resistant and colorfast wash after wash, with a four-way stretch that moves with you for all-day comfort and effortless freedom of motion. Machine wash cold. Tumble dry low. Do not bleach. Iron on low heat.";
 const COAT_FABRIC =
-  "Crafted from premium gabardine fabric with a water-repellent, tear-resistant finish, engineered to stand up to a doctor's toughest shifts — including splashes and spills. Machine wash cold. Tumble dry low. Do not bleach.";
-
+  "Premium Rosalin fabric — soft, lightweight, breathable, and extremely comfortable for long shifts. Designed to feel comfortable without causing excessive heat. Free printing included. Backed by an 8-year warranty.";
 const STANDARD_SIZES = ["M", "L", "XL", "XXL"];
 
 // ─── Color Definitions ────────────────────────────────────────────────────────
@@ -95,11 +94,14 @@ const COAT_FEATURES = [
   "Three front button closure",
   "Two lower patch pockets + one chest pocket",
   "Notched lapel collar",
-  "Water-repellent, wrinkle-resistant fabric",
+  "Premium Rosalin fabric — soft, comfortable, and breathable",
+  "Designed to stay comfortable without feeling hot during long shifts",
+  "Free printing included",
+  "8-year warranty",
 ];
-const COAT_LONG =
-  "The Essential White Coat is the ultimate symbol of medical professionalism. Crafted from a premium gabardine blend with a water-repellent finish, it shields against everyday spills and splashes while offering a clean, authoritative look that stays comfortable across extended wear.";
 
+const COAT_LONG =
+  "The Essential White Coat combines a clean professional look with exceptional everyday comfort. Crafted from premium Rosalin fabric, it is soft, lightweight, and breathable, helping you stay comfortable without feeling hot during long shifts. Designed for doctors and medical professionals who want a polished look without sacrificing comfort. Free printing is included with every coat, backed by an 8-year warranty for long-lasting confidence.";
 // =============================================================================
 //  PRODUCTS ARRAY
 // =============================================================================
@@ -751,9 +753,9 @@ export const products: Product[] = [
     slug: "essential-white-coat",
     category: "tops",
     gender: "unisex",
-    price: 599,
+    price: 500,
     description:
-      "Classic knee-length white coat. Timeless, professional, and built to last.",
+      "Premium Rosalin white coat — extremely comfortable, breathable, free printing included, with an 8-year warranty.",
     longDescription: COAT_LONG,
     features: COAT_FEATURES,
     fabricAndCare: COAT_FABRIC,
@@ -761,16 +763,15 @@ export const products: Product[] = [
       {
         ...WHITE,
         images: [
+          img("/productImage/coat/banner coat.png"),
           img("/productImage/coat/font coat.png"),
+          img("/productImage/coat/girl coat.png"),
           img("/productImage/coat/back coat.png"),
         ],
       },
     ],
     sizes: STANDARD_SIZES,
-    images: [
-      img("/productImage/coat/font coat.png"),
-      img("/productImage/coat/back coat.png"),
-    ],
+    images: [img("/productImage/coat/font coat.png")],
     isBestSeller: true,
     isNewArrival: false,
     stock: 50,
@@ -779,42 +780,42 @@ export const products: Product[] = [
 
   // ── THE dentist  WHITE COAT ──────────────────────────────────────────────
 
-  {
-    id: "dentist-coat",
-    name: "The dentist Dental Coat",
-    slug: "dentist-dental-coat",
-    category: "tops",
-    gender: "unisex",
-    price: 599,
+  // {
+  //   id: "dentist-coat",
+  //   name: "The dentist Dental Coat",
+  //   slug: "dentist-dental-coat",
+  //   category: "tops",
+  //   gender: "unisex",
+  //   price: 599,
 
-    description:
-      "Modern hip-length dental coat designed for comfort, mobility, and a clean professional appearance.",
+  //   description:
+  //     "Modern hip-length dental coat designed for comfort, mobility, and a clean professional appearance.",
 
-    longDescription: DENTAL_COAT_LONG,
+  //   longDescription: DENTAL_COAT_LONG,
 
-    features: DENTAL_COAT_FEATURES,
+  //   features: DENTAL_COAT_FEATURES,
 
-    fabricAndCare: COAT_FABRIC,
+  //   fabricAndCare: COAT_FABRIC,
 
-    colors: [
-      {
-        ...WHITE,
-        images: [
-          img("/productImage/dentist is coat/front coat.jpeg"),
-          img("/productImage/dentist is coat/back coat.jpeg"),
-        ],
-      },
-    ],
+  //   colors: [
+  //     {
+  //       ...WHITE,
+  //       images: [
+  //         img("/productImage/dentist is coat/front coat.jpeg"),
+  //         img("/productImage/dentist is coat/back coat.jpeg"),
+  //       ],
+  //     },
+  //   ],
 
-    sizes: STANDARD_SIZES,
+  //   sizes: STANDARD_SIZES,
 
-    images: [img("/productImage/dentist is coat/front coat.jpeg")],
+  //   images: [img("/productImage/dentist is coat/front coat.jpeg")],
 
-    isBestSeller: true,
-    isNewArrival: true,
-    stock: 50,
-    createdAt: "2026-07-17",
-  },
+  //   isBestSeller: true,
+  //   isNewArrival: true,
+  //   stock: 50,
+  //   createdAt: "2026-07-17",
+  // },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

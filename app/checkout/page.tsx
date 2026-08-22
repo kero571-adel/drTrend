@@ -279,7 +279,7 @@ export default function Checkout() {
                 Placing Order...
               </>
             ) : (
-              <>Place Order · {formatEGP(total)}</>
+              <>Place Order</>
             )}
           </button>
         </form>

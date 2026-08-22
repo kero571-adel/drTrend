@@ -56,7 +56,7 @@ export default function ProductDetail() {
   const thumbImages = [
     ...(defaultColor.images.length > 1 ? defaultColor.images.slice(1) : []),
     ...product.images.filter((i) => i !== defaultColor.images[0]),
-  ].slice(0, 3);
+  ];
 
   const updateSizeQty = (size: string, qty: number) => {
     setSizeQuantities((prev) => ({ ...prev, [size]: Math.max(0, qty) }));
