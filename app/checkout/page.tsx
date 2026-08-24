@@ -9,7 +9,7 @@ import { useToast } from "@/context/ToastContext";
 import { GOVERNORATES, getShippingCost, formatEGP } from "@/lib/shipping";
 import type { Order } from "@/types";
 import { saveOrder } from "@/lib/orders";
-import { initiateCheckout } from "@/lib/fpixel";
+import { initiateCheckout, purchase } from "@/lib/fpixel";
 
 const STORAGE_KEY = "drtrend_saved_address";
 
@@ -147,7 +147,11 @@ export default function Checkout() {
       };
 
       await saveOrder(user.uid, order);
-
+      purchase({
+        orderId: order.orderId,
+        items: items.map((i) => ({ id: i.productId, quantity: i.quantity })),
+        value: total,
+      });
       clearCart();
       showToast("Order placed successfully!", "success");
       router.push("/orders?success=1");
