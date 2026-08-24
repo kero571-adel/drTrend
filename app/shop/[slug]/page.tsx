@@ -12,12 +12,15 @@ import { useToast } from "@/context/ToastContext";
 import { formatEGP } from "@/lib/shipping";
 import ProductJsonLd from "@/components/seo/ProductJsonLd";
 import { viewContent } from "@/lib/fpixel";
+import Comments from "@/components/product/Comments";
+import { getProductComments } from "@/lib/comments";
 
 export default function ProductDetail() {
   const params = useParams();
   const slug = params.slug as string;
   const product = slug ? getProductBySlug(slug) : undefined;
-
+  const [reviewCount, setReviewCount] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
   const { addItem } = useCart();
   const { showToast } = useToast();
 
@@ -105,6 +108,31 @@ export default function ProductDetail() {
       category: product.category,
     });
   }, [product.id]);
+  useEffect(() => {
+
+    const loadReviews = async () => {
+      try {
+        const comments = await getProductComments(product.id);
+
+        setReviewCount(comments.length);
+
+        if (comments.length > 0) {
+          const totalRating = comments.reduce(
+            (sum, comment) => sum + comment.rating,
+            0,
+          );
+
+          setAverageRating(totalRating / comments.length);
+        } else {
+          setAverageRating(0);
+        }
+      } catch (error) {
+        console.error("Failed to load product reviews:", error);
+      }
+    };
+
+    loadReviews();
+  }, [product.id]);
   const DISCOUNT_PERCENT = 30;
   const discountedPrice = product.price;
   const originalPrice = discountedPrice / (1 - DISCOUNT_PERCENT / 100);
@@ -128,10 +156,41 @@ export default function ProductDetail() {
               </span>
             </nav>
 
-            <h1 className="font-heading font-bold text-2xl md:text-3xl text-gray-900 mb-3">
+            <h1 className="font-heading font-bold text-2xl md:text-3xl text-gray-900 mb-2">
               {product.name}
             </h1>
 
+            {/* Reviews */}
+            <div className="flex items-center gap-2 mb-5">
+              {reviewCount > 0 ? (
+                <>
+                  <div className="flex items-center gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span
+                        key={star}
+                        className={`text-sm ${
+                          star <= Math.round(averageRating)
+                            ? "text-yellow-500"
+                            : "text-gray-300"
+                        }`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+
+                  <span className="text-sm font-semibold text-gray-700">
+                    {averageRating.toFixed(1)}
+                  </span>
+
+                  <span className="text-sm text-gray-400">
+                    ({reviewCount} {reviewCount === 1 ? "Review" : "Reviews"})
+                  </span>
+                </>
+              ) : (
+                ""
+              )}
+            </div>
             <div className="flex items-center gap-2 mb-5">
               <p className="text-primary font-heading font-bold text-2xl md:text-3xl mr-2">
                 {formatEGP(discountedPrice)}
@@ -242,6 +301,7 @@ export default function ProductDetail() {
             </div>
           </div>
         </div>
+        <Comments productId={product.id} />
         <SizeGuideModal
           open={sizeGuideOpen}
           onClose={() => setSizeGuideOpen(false)}

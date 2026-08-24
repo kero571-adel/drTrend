@@ -38,7 +38,15 @@ export interface CartItem {
   unitPrice: number;
   image: string;
 }
-
+export interface Comment {
+  id: string;
+  productId: string;
+  userId: string;
+  userName: string;
+  rating: number; // 1-5
+  text: string;
+  createdAt: string;
+}
 export interface Order {
   orderId: string;
   userId: string;
