@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { Product } from "@/types";
 import { formatEGP } from "@/lib/shipping";
+import Image from "next/image";
 
 interface Props {
   product: Product;
@@ -26,7 +27,7 @@ export default function ProductCard({ product, onAddToCart }: Props) {
         href={`/shop/${product.slug}`}
         className="relative aspect-[4/5] rounded-lg overflow-hidden bg-gray-100 mb-3 block"
       >
-        <img
+        <Image
           src={image}
           alt={product.name}
           loading="lazy"
