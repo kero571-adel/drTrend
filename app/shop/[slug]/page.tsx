@@ -23,6 +23,7 @@ export default function ProductDetail() {
   const [averageRating, setAverageRating] = useState(0);
   const { addItem } = useCart();
   const { showToast } = useToast();
+  const [wantsPrint, setWantsPrint] = useState(false);
 
   // key: size, value: quantity (0 = not selected)
   const [sizeQuantities, setSizeQuantities] = useState<Record<string, number>>(
@@ -109,7 +110,6 @@ export default function ProductDetail() {
     });
   }, [product.id]);
   useEffect(() => {
-
     const loadReviews = async () => {
       try {
         const comments = await getProductComments(product.id);
@@ -134,8 +134,11 @@ export default function ProductDetail() {
     loadReviews();
   }, [product.id]);
   const DISCOUNT_PERCENT = 30;
-  const discountedPrice = product.price;
-  const originalPrice = discountedPrice / (1 - DISCOUNT_PERCENT / 100);
+  const isCoat = product.id === "white-coat";
+  const discountedPrice = isCoat ? 500 : product.price;
+  const originalPrice = isCoat
+    ? 650
+    : Math.round(discountedPrice / (1 - DISCOUNT_PERCENT / 100));
   return (
     <>
       <ProductJsonLd product={product} />
@@ -211,7 +214,7 @@ export default function ProductDetail() {
                 </span>
                 <button
                   onClick={() => setSizeGuideOpen(true)}
-                  className="text-xs text-primary font-semibold hover:underline"
+                  className="text-xl text-primary font-semibold hover:underline"
                 >
                   Size Guide
                 </button>
@@ -261,7 +264,38 @@ export default function ProductDetail() {
                 })}
               </div>
             </div>
+            {/* Custom Print / Logo — only for the white coat */}
+            {product.id === "white-coat" && (
+              <div className="mb-6">
+                <label className="flex items-start gap-3 p-4 rounded-lg border-2 border-gray-900 bg-gray-50 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={wantsPrint}
+                    onChange={(e) => setWantsPrint(e.target.checked)}
+                    className="mt-0.5 w-5 h-5 accent-gray-900 cursor-pointer"
+                  />
+                  <span className="text-sm md:text-base font-semibold text-gray-900">
+                    Want your name and logo{" "}
+                    <span className="text-primary font-bold underline decoration-2">
+                      printed
+                    </span>{" "}
+                    on the coat?{" "}
+                    <span className="text-primary font-bold">
+                      (Free printing)
+                    </span>
+                  </span>
+                </label>
 
+                {wantsPrint && (
+                  <div className="mt-3 p-4 rounded-lg bg-primary/5 border border-primary/20 text-sm text-gray-700 leading-relaxed">
+                    After completing your purchase, we&apos;ll contact you on
+                    the phone number you provide to confirm the print details
+                    (name / logo and placement). This service is completely
+                    free.
+                  </div>
+                )}
+              </div>
+            )}
             {/* Add to cart */}
             <div className="mb-4">
               <button

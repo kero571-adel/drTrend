@@ -16,10 +16,12 @@ export default function ProductCard({ product, onAddToCart }: Props) {
   const firstColor = product.colors[0];
   const image = firstColor?.images[0] || product.images[0] || "";
 
-  // السعر الموجود في product.price هو السعر بعد الخصم
-  // بنحسب السعر الأصلي قبل الخصم عكسياً
-  const discountedPrice = product.price;
-  const originalPrice = discountedPrice / (1 - DISCOUNT_PERCENT / 100);
+  const isCoat = product.id === "white-coat";
+
+  const discountedPrice = isCoat ? 500 : product.price;
+  const originalPrice = isCoat
+    ? 650
+    : Math.round(discountedPrice / (1 - DISCOUNT_PERCENT / 100));
 
   return (
     <div className="group flex flex-col">
@@ -30,8 +32,10 @@ export default function ProductCard({ product, onAddToCart }: Props) {
         <Image
           src={image}
           alt={product.name}
+          fill
           loading="lazy"
-          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 768px) 50vw, 25vw"
+          className="object-contain transition-transform duration-500 group-hover:scale-105"
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = "none";
           }}
