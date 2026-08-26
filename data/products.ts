@@ -114,7 +114,7 @@ export const products: Product[] = [
     slug: "essential-white-coat",
     category: "tops",
     gender: "unisex",
-    price: 500,
+    price: 550,
     description:
       "Premium Rosalin white coat — extremely comfortable, breathable, free printing included, with an 8-year warranty.",
     longDescription: COAT_LONG,

@@ -18,9 +18,9 @@ export default function ProductCard({ product, onAddToCart }: Props) {
 
   const isCoat = product.id === "white-coat";
 
-  const discountedPrice = isCoat ? 500 : product.price;
+  const discountedPrice = isCoat ? 550 : product.price;
   const originalPrice = isCoat
-    ? 650
+    ? 750
     : Math.round(discountedPrice / (1 - DISCOUNT_PERCENT / 100));
 
   return (
