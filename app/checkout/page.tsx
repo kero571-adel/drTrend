@@ -342,8 +342,8 @@ export default function Checkout() {
             </div>
             <div className="border-t border-gray-100 mt-4 pt-4 flex justify-between items-center">
               <span className="font-heading font-bold">Total</span>
-              <span className="font-heading font-bold text-xl text-primary">
-                {total}
+              <span className="font-heading font-bold text-xl ">
+                EGB {total}
               </span>
             </div>
           </div>
