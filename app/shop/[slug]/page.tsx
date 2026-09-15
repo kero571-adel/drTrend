@@ -135,7 +135,7 @@ export default function ProductDetail() {
   }, [product.id]);
   const DISCOUNT_PERCENT = 30;
   const isCoat = product.id === "white-coat";
-  const discountedPrice = isCoat ? 550 : product.price;
+  const discountedPrice = isCoat ? 580 : product.price;
   const originalPrice = isCoat
     ? 750
     : Math.round(discountedPrice / (1 - DISCOUNT_PERCENT / 100));

@@ -10,6 +10,7 @@ import { GOVERNORATES, getShippingCost, formatEGP } from "@/lib/shipping";
 import type { Order } from "@/types";
 import { saveOrder } from "@/lib/orders";
 import { initiateCheckout, purchase } from "@/lib/fpixel";
+import { products } from "@/data/products"; // عدّل المسار لو مختلف عندك
 
 const STORAGE_KEY = "drtrend_saved_address";
 
@@ -75,9 +76,16 @@ export default function Checkout() {
 
   if (authLoading || !user || items.length === 0) return null;
 
-  const shipping = address.governorate
-    ? getShippingCost(address.governorate)
-    : null;
+const isCoatOrder = items.some((i) => {
+  const product = products.find((p) => p.id === i.productId);
+  return product?.slug.includes("coat");
+});
+
+const shipping = isCoatOrder
+  ? 0
+  : address.governorate
+  ? getShippingCost(address.governorate)
+  : null;
 
   const total = shipping !== null ? subtotal + shipping : subtotal;
 

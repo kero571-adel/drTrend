@@ -107,14 +107,13 @@ const COAT_LONG =
 // =============================================================================
 export const products: Product[] = [
   // ── THE ESSENTIAL WHITE COAT ──────────────────────────────────────────────
-
   {
     id: "white-coat",
     name: "The Essential White Coat",
     slug: "essential-white-coat",
     category: "tops",
     gender: "unisex",
-    price: 550,
+    price: 580,
     description:
       "Premium Rosalin white coat — extremely comfortable, breathable, free printing included, with an 8-year warranty.",
     longDescription: COAT_LONG,
