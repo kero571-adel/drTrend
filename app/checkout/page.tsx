@@ -331,9 +331,10 @@ export default function Checkout() {
             <div className="border-t border-gray-100 pt-4 space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Subtotal</span>
-                <span className="font-semibold" data-meta-value="subtotal">
+
+                <p className="font-semibold" data-meta-price="subtotal">
                   {formatEGP(subtotal)}
-                </span>
+                </p>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Shipping</span>
@@ -342,18 +343,17 @@ export default function Checkout() {
                 </span>
               </div>
             </div>
-            <div
-              className="border-t border-gray-100 mt-4 pt-4 flex justify-between items-center"
-              data-meta-order-total={total}
-            >
-              <span className="font-heading font-bold">Total</span>
+            <div className="border-t border-gray-100 mt-4 pt-4">
+              <div className="flex justify-between items-center">
+                <span className="font-heading font-bold">Total</span>
 
-              <span
-                className="font-heading font-bold text-xl"
-                data-meta-value="total"
-              >
-                {formatEGP(total)}
-              </span>
+                <p
+                  className="font-heading font-bold text-xl"
+                  data-meta-price="total"
+                >
+                  {formatEGP(total)}
+                </p>
+              </div>
             </div>
           </div>
           <div className="mt-4 text-center">
