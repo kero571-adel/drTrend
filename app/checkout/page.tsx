@@ -76,16 +76,16 @@ export default function Checkout() {
 
   if (authLoading || !user || items.length === 0) return null;
 
-const isCoatOrder = items.some((i) => {
-  const product = products.find((p) => p.id === i.productId);
-  return product?.slug.includes("coat");
-});
+  const isCoatOrder = items.some((i) => {
+    const product = products.find((p) => p.id === i.productId);
+    return product?.slug.includes("coat");
+  });
 
-const shipping = isCoatOrder
-  ? 0
-  : address.governorate
-  ? getShippingCost(address.governorate)
-  : null;
+  const shipping = isCoatOrder
+    ? 0
+    : address.governorate
+      ? getShippingCost(address.governorate)
+      : null;
 
   const total = shipping !== null ? subtotal + shipping : subtotal;
 
@@ -343,7 +343,7 @@ const shipping = isCoatOrder
             <div className="border-t border-gray-100 mt-4 pt-4 flex justify-between items-center">
               <span className="font-heading font-bold">Total</span>
               <span className="font-heading font-bold text-xl text-primary">
-                {formatEGP(total)}
+                {total}
               </span>
             </div>
           </div>

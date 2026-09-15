@@ -96,12 +96,12 @@ const COAT_FEATURES = [
   "Notched lapel collar",
   "Premium Rosalin fabric — soft, comfortable, and breathable",
   "Designed to stay comfortable without feeling hot during long shifts",
-  "Free printing included",
+  "FREE Shipping & FREE Printing included",
   "8-year warranty",
 ];
 
 const COAT_LONG =
-  "The Essential White Coat combines a clean professional look with exceptional everyday comfort. Crafted from premium Rosalin fabric, it is soft, lightweight, and breathable, helping you stay comfortable without feeling hot during long shifts. Designed for doctors and medical professionals who want a polished look without sacrificing comfort. Free printing is included with every coat, backed by an 8-year warranty for long-lasting confidence.";
+  "The Essential White Coat combines a clean professional look with exceptional everyday comfort. Crafted from premium Rosalin fabric, it is soft, lightweight, and breathable, helping you stay comfortable without feeling hot during long shifts. Designed for doctors and medical professionals who want a polished look without sacrificing comfort. FREE shipping and FREE printing are included with every coat, backed by an 8-year warranty for long-lasting confidence.";
 // =============================================================================
 //  PRODUCTS ARRAY
 // =============================================================================
@@ -115,7 +115,7 @@ export const products: Product[] = [
     gender: "unisex",
     price: 580,
     description:
-      "Premium Rosalin white coat — extremely comfortable, breathable, free printing included, with an 8-year warranty.",
+      "Premium Rosalin white coat — extremely comfortable, breathable. FREE Shipping & FREE Printing included, with an 8-year warranty.",
     longDescription: COAT_LONG,
     features: COAT_FEATURES,
     fabricAndCare: COAT_FABRIC,
