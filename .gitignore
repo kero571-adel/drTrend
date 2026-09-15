@@ -18,7 +18,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-#.env*.local
+.env*.local
 
 # vercel
 .vercel
@@ -26,5 +26,5 @@ drtrend-3b1f8-firebase-adminsdk-fbsvc-23503a38f9.json
 
 # typescript
 *.tsbuildinfo
-#next-env.d.ts
+next-env.d.ts
 
