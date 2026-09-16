@@ -72,11 +72,12 @@ export const initiateCheckout = (cart: {
 
     num_items: cart.items.reduce((sum, item) => sum + item.quantity, 0),
 
-    subtotal: cart.subtotal,
-    shipping: cart.shipping,
-    value: cart.total,
+    value: cart.subtotal,
 
     currency: "EGP",
+
+    subtotal: cart.subtotal,
+    shipping: cart.shipping,
   });
 };
 
@@ -86,7 +87,6 @@ export const purchase = (order: {
   items: { id: string; quantity: number }[];
   subtotal: number;
   shipping: number;
-  value: number;
 }) => {
   track("Purchase", {
     content_ids: order.items.map((i) => i.id),
@@ -98,11 +98,14 @@ export const purchase = (order: {
 
     num_items: order.items.reduce((sum, item) => sum + item.quantity, 0),
 
+    // قيمة المنتجات فقط بدون الشحن
+    value: order.subtotal,
+
+    currency: "EGP",
+
+    // نحتفظ بهم كـ custom parameters
     subtotal: order.subtotal,
     shipping: order.shipping,
-
-    value: order.value,
-    currency: "EGP",
 
     order_id: order.orderId,
   });

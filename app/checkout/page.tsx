@@ -223,16 +223,9 @@ export default function Checkout() {
           quantity: i.quantity,
         })),
 
-        // Products total before shipping
         subtotal: subtotal,
-
-        // Shipping cost
         shipping: shipping || 0,
-
-        // Final order total
-        value: total,
       });
-
       clearCart();
 
       showToast("Order placed successfully!", "success");
