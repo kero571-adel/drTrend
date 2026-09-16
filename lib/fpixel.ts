@@ -58,16 +58,24 @@ export const addToCart = (product: {
 /** لما العميل يدخل صفحة الـ checkout */
 export const initiateCheckout = (cart: {
   items: { id: string; quantity: number }[];
+  subtotal: number;
+  shipping: number;
   total: number;
 }) => {
   track("InitiateCheckout", {
     content_ids: cart.items.map((i) => i.id),
+
     contents: cart.items.map((i) => ({
       id: i.id,
       quantity: i.quantity,
     })),
-    num_items: cart.items.length,
+
+    num_items: cart.items.reduce((sum, item) => sum + item.quantity, 0),
+
+    subtotal: cart.subtotal,
+    shipping: cart.shipping,
     value: cart.total,
+
     currency: "EGP",
   });
 };
@@ -76,15 +84,26 @@ export const initiateCheckout = (cart: {
 export const purchase = (order: {
   orderId: string;
   items: { id: string; quantity: number }[];
+  subtotal: number;
+  shipping: number;
   value: number;
 }) => {
   track("Purchase", {
     content_ids: order.items.map((i) => i.id),
+
     contents: order.items.map((i) => ({
       id: i.id,
       quantity: i.quantity,
     })),
+
+    num_items: order.items.reduce((sum, item) => sum + item.quantity, 0),
+
+    subtotal: order.subtotal,
+    shipping: order.shipping,
+
     value: order.value,
     currency: "EGP",
+
+    order_id: order.orderId,
   });
 };

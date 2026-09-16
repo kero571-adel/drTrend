@@ -10,7 +10,7 @@ import { GOVERNORATES, getShippingCost, formatEGP } from "@/lib/shipping";
 import type { Order } from "@/types";
 import { saveOrder } from "@/lib/orders";
 import { initiateCheckout, purchase } from "@/lib/fpixel";
-import { products } from "@/data/products"; // عدّل المسار لو مختلف عندك
+import { products } from "@/data/products";
 
 const STORAGE_KEY = "drtrend_saved_address";
 
@@ -46,6 +46,7 @@ export default function Checkout() {
   // Load saved address
   useEffect(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
+
     if (raw) {
       try {
         setAddress(JSON.parse(raw));
@@ -59,63 +60,105 @@ export default function Checkout() {
   // Auth + cart gate
   useEffect(() => {
     if (authLoading) return;
-    if (!user) router.replace("/auth/login?returnUrl=/checkout");
-    if (items.length === 0) router.replace("/cart");
+
+    if (!user) {
+      router.replace("/auth/login?returnUrl=/checkout");
+    }
+
+    if (items.length === 0) {
+      router.replace("/cart");
+    }
   }, [user, authLoading, items.length, router]);
 
-  // تتبع حدث دخول صفحة الـ checkout لـ Meta Pixel
-  useEffect(() => {
-    if (!authLoading && user && items.length > 0) {
-      initiateCheckout({
-        items: items.map((i) => ({ id: i.productId, quantity: i.quantity })),
-        total: subtotal,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  if (authLoading || !user || items.length === 0) return null;
-
+  // Check whether this order contains a coat
   const isCoatOrder = items.some((i) => {
     const product = products.find((p) => p.id === i.productId);
     return product?.slug.includes("coat");
   });
 
+  // Calculate shipping
   const shipping = isCoatOrder
     ? 0
     : address.governorate
       ? getShippingCost(address.governorate)
       : null;
 
+  // Calculate final total
   const total = shipping !== null ? subtotal + shipping : subtotal;
 
+  // Track InitiateCheckout only when shipping is known
+  useEffect(() => {
+    if (!authLoading && user && items.length > 0 && shipping !== null) {
+      initiateCheckout({
+        items: items.map((i) => ({
+          id: i.productId,
+          quantity: i.quantity,
+        })),
+        subtotal: subtotal,
+        shipping: shipping,
+        total: total,
+      });
+    }
+  }, [authLoading, user, items, subtotal, shipping, total]);
+
+  // IMPORTANT:
+  // All hooks must come before this early return.
+  if (authLoading || !user || items.length === 0) {
+    return null;
+  }
+
   const update = (k: keyof Address, v: string) => {
-    setAddress((prev) => ({ ...prev, [k]: v }));
-    setErrors((prev) => ({ ...prev, [k]: undefined }));
+    setAddress((prev) => ({
+      ...prev,
+      [k]: v,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      [k]: undefined,
+    }));
   };
 
   const validate = () => {
     const e: Partial<Record<keyof Address, string>> = {};
-    if (!address.fullName.trim()) e.fullName = "Full name is required";
-    if (!address.phone.trim()) e.phone = "Phone number is required";
-    else if (!/^01[0-9]{9}$/.test(address.phone.replace(/\s/g, "")))
+
+    if (!address.fullName.trim()) {
+      e.fullName = "Full name is required";
+    }
+
+    if (!address.phone.trim()) {
+      e.phone = "Phone number is required";
+    } else if (!/^01[0-9]{9}$/.test(address.phone.replace(/\s/g, ""))) {
       e.phone = "Enter a valid Egyptian phone number (01X XXXX XXXX)";
-    if (!address.governorate) e.governorate = "Please select a governorate";
-    if (!address.city.trim()) e.city = "City / district is required";
-    if (!address.detailedAddress.trim())
+    }
+
+    if (!address.governorate) {
+      e.governorate = "Please select a governorate";
+    }
+
+    if (!address.city.trim()) {
+      e.city = "City / district is required";
+    }
+
+    if (!address.detailedAddress.trim()) {
       e.detailedAddress = "Detailed address is required";
+    }
+
     setErrors(e);
+
     return Object.keys(e).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!validate()) {
       showToast("Please fix the form errors", "error");
       return;
     }
 
     setSubmitting(true);
+
     try {
       if (saveAddress) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(address));
@@ -125,19 +168,29 @@ export default function Checkout() {
 
       const order: Order = {
         orderId: Math.random().toString(36).slice(2, 10).toUpperCase(),
+
         userId: user.uid,
         userEmail: user.email,
+
         items: items.map((i) => ({
           ...i,
           totalPrice: i.unitPrice * i.quantity,
         })),
+
         subtotal,
+
         shipping: shipping || 0,
+
         total,
+
         grandTotal: subtotal + (shipping || 0),
+
         placedAt: new Date().toISOString(),
+
         createdAt: new Date().toISOString(),
+
         address,
+
         customer: {
           name: address.fullName,
           phone: address.phone,
@@ -146,22 +199,44 @@ export default function Checkout() {
           city: address.city,
           address: address.detailedAddress,
         },
+
         status: "pending",
-        // الطريقة العادية: كل حاجة كاش عند الاستلام، مفيش دفع أونلاين حاليًا
+
+        // Cash on delivery
         productPaymentMethod: "cash",
+
         amountDueOnline: 0,
+
         amountDueOnDelivery: total,
+
         paymentStatus: "pending",
       };
 
       await saveOrder(user.uid, order);
+
+      // Meta Pixel - Purchase
       purchase({
         orderId: order.orderId,
-        items: items.map((i) => ({ id: i.productId, quantity: i.quantity })),
+
+        items: items.map((i) => ({
+          id: i.productId,
+          quantity: i.quantity,
+        })),
+
+        // Products total before shipping
+        subtotal: subtotal,
+
+        // Shipping cost
+        shipping: shipping || 0,
+
+        // Final order total
         value: total,
       });
+
       clearCart();
+
       showToast("Order placed successfully!", "success");
+
       router.push("/orders?success=1");
     } catch {
       showToast("Something went wrong. Please try again.", "error");
@@ -208,12 +283,14 @@ export default function Checkout() {
               className={inputCls(!!errors.governorate)}
             >
               <option value="">Select governorate</option>
+
               {GOVERNORATES.map((g) => (
                 <option key={g.name} value={g.name}>
                   {g.name}
                 </option>
               ))}
             </select>
+
             {shipping !== null && (
               <p className="mt-2 text-xs text-primary font-medium">
                 Shipping: {formatEGP(shipping)}
@@ -251,12 +328,13 @@ export default function Checkout() {
             Save this address for future orders
           </label>
 
-          {/* ملحوظة الدفع الإلكتروني - قريبًا */}
+          {/* Online payment notice */}
           <div className="border-t border-gray-100 pt-5">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <p className="text-sm text-gray-700">
                 💳 Online payment on website is coming soon.
               </p>
+
               <p className="text-xs text-black-500 mt-1">
                 Want to pay online now?{" "}
                 <Link
@@ -302,6 +380,7 @@ export default function Checkout() {
             <h2 className="font-heading font-bold text-lg mb-5">
               Order Summary
             </h2>
+
             <div className="space-y-3 max-h-72 overflow-y-auto mb-4">
               {items.map((i) => (
                 <div
@@ -313,22 +392,28 @@ export default function Checkout() {
                     alt={i.name}
                     className="w-14 h-14 rounded-lg object-cover bg-gray-100"
                   />
+
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{i.name}</p>
+
                     <p className="text-xs text-gray-500">
                       {i.color} / {i.size}
                     </p>
+
                     <p className="text-xs text-gray-500 mt-0.5">
                       Qty: {i.quantity}
                     </p>
                   </div>
+
                   <p className="text-sm font-semibold">
                     {formatEGP(i.unitPrice * i.quantity)}
                   </p>
                 </div>
               ))}
             </div>
+
             <div className="border-t border-gray-100 pt-4 space-y-2 text-sm">
+              {/* Subtotal */}
               <div className="flex justify-between">
                 <span className="text-gray-600">Subtotal</span>
 
@@ -336,13 +421,18 @@ export default function Checkout() {
                   {formatEGP(subtotal)}
                 </p>
               </div>
+
+              {/* Shipping */}
               <div className="flex justify-between">
                 <span className="text-gray-600">Shipping</span>
-                <span className="font-semibold">
+
+                <p className="font-semibold" data-meta-price="shipping">
                   {shipping !== null ? formatEGP(shipping) : "—"}
-                </span>
+                </p>
               </div>
             </div>
+
+            {/* Total */}
             <div className="border-t border-gray-100 mt-4 pt-4">
               <div className="flex justify-between items-center">
                 <span className="font-heading font-bold">Total</span>
@@ -356,6 +446,7 @@ export default function Checkout() {
               </div>
             </div>
           </div>
+
           <div className="mt-4 text-center">
             <Link href="/cart" className="text-sm text-primary hover:underline">
               ← Back to Cart
@@ -387,7 +478,9 @@ function Field({
       <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
         {label}
       </label>
+
       {children}
+
       {error && <p className="text-red-500 text-xs mt-1.5">{error}</p>}
     </div>
   );
