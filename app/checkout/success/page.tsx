@@ -9,19 +9,20 @@
 // import { purchase } from "@/lib/fpixel";
 // import type { Order } from "@/types";
 // // ← الكومبوننت الرئيسي اللي بيتصدّر لازم يلف الجزء اللي فيه useSearchParams بـ Suspense
-// export default function CheckoutSuccessPage() {
-//   return (
-//     <Suspense
-//       fallback={
-//         <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-//           <p className="text-gray-500 text-sm">Loading...</p>
-//         </div>
-//       }
-//     >
-//       <CheckoutSuccess />
-//     </Suspense>
-//   );
-// }
+export default function CheckoutSuccessPage() {
+  return (
+    <div>CheckoutSuccessPage</div>
+    // <Suspense
+    //   fallback={
+    //     <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+    //       <p className="text-gray-500 text-sm">Loading...</p>
+    //     </div>
+    //   }
+    // >
+    //   <CheckoutSuccess />
+    // </Suspense>
+  );
+}
 
 // // ← ده نفس الكومبوننت بتاعك بالظبط، بس دلوقتي مش هو المُصدَّر مباشرة
 // function CheckoutSuccess() {
