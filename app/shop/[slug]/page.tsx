@@ -144,8 +144,11 @@ export default function ProductDetail() {
       <ProductJsonLd product={product} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-10 lg:gap-14">
-          <ImageGallery images={thumbImages} mainImage={mainImage} />
-
+          <ImageGallery
+            images={thumbImages}
+            mainImage={mainImage}
+            videoUrl={product.videoUrl}
+          />
           <div>
             <nav className="text-xs text-gray-500 mb-4 flex items-center gap-1.5">
               <Link href="/shop" className="hover:text-primary capitalize">

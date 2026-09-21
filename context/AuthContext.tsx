@@ -1,5 +1,4 @@
 "use client";
-
 import {
   createContext,
   useContext,
@@ -18,7 +17,6 @@ import {
 } from "firebase/auth";
 import { auth } from "@/firebase";
 import type { User } from "@/types";
-
 interface AuthContextType {
   user: User | null;
   loading: boolean; // ← مضاف: مهم عشان نمنع redirect قبل ما Firebase يرجع الـ session
@@ -33,7 +31,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true); // true حتى Firebase يأكد الـ session
-
   // Firebase يحافظ على الـ session تلقائياً — onAuthStateChanged هو المصدر الوحيد للحقيقة
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {

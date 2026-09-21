@@ -25,6 +25,7 @@ export interface Product {
   isNewArrival: boolean;
   stock: number;
   createdAt: string;
+  videoUrl?: string;
 }
 
 export interface CartItem {
@@ -55,7 +56,7 @@ export interface Order {
   subtotal: number;
   shipping: number;
   total: number;
-
+  value?: number;
   paymobOrderId?: number;
   transactionId?: string;
   grandTotal: number;

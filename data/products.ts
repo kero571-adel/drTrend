@@ -132,6 +132,7 @@ export const products: Product[] = [
     ],
     sizes: STANDARD_SIZES,
     images: [img("/productImage/coat/font coat.webp")],
+    videoUrl: "https://youtube.com/shorts/y_O6ir5Tm9c?si=To7MOOctI2Q41lbm",
     isBestSeller: true,
     isNewArrival: false,
     stock: 50,
