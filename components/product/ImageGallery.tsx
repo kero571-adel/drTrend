@@ -30,6 +30,7 @@ export default function ImageGallery({ images, mainImage, videoUrl }: Props) {
     : images;
 
   const embedUrl = getYouTubeEmbedUrl(videoUrl);
+  // If there's a video, we treat it as the last item in the gallery
   const videoIndex = embedUrl ? all.length : -1;
   const isVideoSelected = embedUrl !== null && selected === videoIndex;
 
