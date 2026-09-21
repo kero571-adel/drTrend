@@ -30,7 +30,7 @@ export default function ImageGallery({ images, mainImage, videoUrl }: Props) {
     : images;
 
   const embedUrl = getYouTubeEmbedUrl(videoUrl);
-  const videoIndex = 0;
+  const videoIndex = embedUrl ? all.length : -1;
   const isVideoSelected = embedUrl !== null && selected === videoIndex;
 
   return (
